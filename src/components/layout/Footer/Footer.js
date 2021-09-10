@@ -7,7 +7,6 @@ const StyledFooter = styled.footer`
     bottom: 0;
     width: 100%;
     margin-top: 5rem;
-    background-color: wheat;
     .layout {
         padding: 4rem 2rem;
         margin: 0 auto;

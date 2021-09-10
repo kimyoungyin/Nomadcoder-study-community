@@ -1,12 +1,7 @@
 import styled from "styled-components";
+import StyledFooterHeading from "../StyledFooterHeading";
 
 const StyledFooterMenu = styled.div`
-    h4 {
-        line-height: 1.25rem;
-        font-weight: 600;
-        font-size: 0.875rem;
-        letter-spacing: 0.05em;
-    }
     ul {
         margin-top: 1rem;
         li {
@@ -25,10 +20,10 @@ const StyledFooterMenu = styled.div`
 const FooterMenu = ({ h4, list }) => {
     return (
         <StyledFooterMenu>
-            <h4>{h4}</h4>
+            <StyledFooterHeading>{h4}</StyledFooterHeading>
             <ul>
                 {list.map((obj) => (
-                    <li>
+                    <li key={obj.text}>
                         <a href={`https://nomadcoders.co/${obj.route}`}>
                             {obj.text}
                         </a>
