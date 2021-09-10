@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import StyledFooterHeading from "../StyledFooterHeading";
+import StyledFooterHeading from "../UI/StyledFooterHeading";
 
 const StyledFooterMenu = styled.div`
     ul {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import StyledFooterHeading from "../StyledFooterHeading";
+import StyledFooterHeading from "../UI/StyledFooterHeading";
 import { footerMenu1, FooterMenu2 } from "./Data";
 import FooterMenu from "./FooterMenu";
 
