@@ -1,12 +1,18 @@
 import { useState } from "react";
 
-const useInput = (initialValue) => {
-    const [input, setInput] = useState(initialValue);
+const useInput = (initialValue, validator) => {
+    const [value, setValue] = useState(initialValue);
     const onChange = (event) => {
         const {
             target: { value },
         } = event;
-        setInput(value);
+        let isValid = true;
+        if (typeof validator === "function") {
+            isValid = validator(value);
+        }
+        if (isValid) {
+            setValue(value);
+        }
     };
-    return { value: input, onChange };
+    return { value, onChange };
 };
