@@ -16,3 +16,5 @@ const useInput = (initialValue, validator) => {
     };
     return { value, onChange };
 };
+
+export default useInput;
