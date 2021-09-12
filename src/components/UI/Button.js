@@ -7,7 +7,7 @@ const shadow = {
   lg: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
 };
 
-const StyledButton = styled.button`
+const Button = styled.button`
   background-color: ${(props) =>
     props.background ||
     '#2563EB'}; // theme 파일 merge 후, default color 변경 예정
@@ -31,9 +31,5 @@ const StyledButton = styled.button`
     opacity: 0.75;
   }
 `;
-
-function Button({ children, ...props }) {
-  return <StyledButton {...props}>{children}</StyledButton>;
-}
 
 export default Button;
