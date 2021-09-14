@@ -1,7 +1,14 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faFacebookSquare,
+    faGithub,
+    faInstagram,
+    faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 
 const StyledFooterBottom = styled.div`
-    border-top: 1px solid rgba(229, 231, 235, 1); //opacity var
+    border-top: 1px solid ${(props) => props.theme.grey_border};
     padding-top: 2rem;
     margin-top: 2rem;
     display: flex;
@@ -16,12 +23,16 @@ const StyledFooterBottom = styled.div`
         a {
             text-decoration: none;
             color: inherit;
+            font-size: 1.33333em;
+            &:hover path {
+                color: ${(props) => props.theme.grey_hover};
+            }
         }
     }
     p {
         text-align: left;
-        line-height: 1.5rem;
         font-size: 1rem;
+        color: ${(props) => props.theme.grey_400};
     }
     @media (max-width: 768px) {
         display: block;
@@ -36,12 +47,18 @@ const FooterBottom = () => {
     return (
         <StyledFooterBottom>
             <div className="social-links">
-                <a href="https://www.instagram.com/nomad_coders/">Instargram</a>
-                <a href="https://www.youtube.com/channel/UCUpJs89fSBXNolQGOYKn0YQ">
-                    Youtube
+                <a href="https://www.instagram.com/nomad_coders/">
+                    <FontAwesomeIcon icon={faInstagram} />
                 </a>
-                <a href="https://www.facebook.com/nomadcoders">Facebook</a>
-                <a href="https://github.com/serranoarevalo">Github</a>
+                <a href="https://www.youtube.com/channel/UCUpJs89fSBXNolQGOYKn0YQ">
+                    <FontAwesomeIcon icon={faYoutube} />
+                </a>
+                <a href="https://www.facebook.com/nomadcoders">
+                    <FontAwesomeIcon icon={faFacebookSquare} />
+                </a>
+                <a href="https://github.com/serranoarevalo">
+                    <FontAwesomeIcon icon={faGithub} />
+                </a>
             </div>
             <p>© 2017-2021 Nomad Coders. All rights reserved.</p>
         </StyledFooterBottom>

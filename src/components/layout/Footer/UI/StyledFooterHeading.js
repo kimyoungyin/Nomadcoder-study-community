@@ -7,6 +7,7 @@ const StyledFooterHeading = styled.h4`
     letter-spacing: 0.05em;
     margin-bottom: 1rem;
     text-transform: uppercase;
+    color: ${(props) => props.theme.grey_400};
 `;
 
 export default StyledFooterHeading;

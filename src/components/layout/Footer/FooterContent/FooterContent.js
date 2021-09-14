@@ -5,7 +5,6 @@ import FooterMenu from "./FooterMenu";
 
 const StyledFooterContent = styled.div`
     display: grid;
-    /* grid-template-columns: repeat(3, minmax(0, 1fr)); */
     grid-template-areas: "info info logo";
     gap: 2rem;
 
@@ -17,8 +16,6 @@ const StyledFooterContent = styled.div`
 
     .info {
         grid-area: info;
-        /* grid-column: 1 /3; */
-        /* grid-template-columns: repeat(2, minmax(0, 1fr)); */
         grid-template-areas: "title menuBox";
         @media (max-width: 1024px) {
             grid-template-areas:
@@ -29,7 +26,7 @@ const StyledFooterContent = styled.div`
         gap: 3.5rem;
         .description {
             font-size: 0.75rem;
-            line-height: 1.5; // html에 기본 설정됨
+            line-height: 1.5;
         }
         .menuBox {
             display: grid;
@@ -48,7 +45,7 @@ const StyledFooterContent = styled.div`
             margin-bottom: 2rem;
         }
         span {
-            color: rgba(156, 163, 175, 1); //opacity var로 따로 설정하는 듯
+            color: ${(props) => props.theme.grey_400};
         }
     }
 `;

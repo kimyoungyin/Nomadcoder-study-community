@@ -10,7 +10,6 @@ const StyledFooterMenu = styled.div`
                 text-decoration: none;
                 color: inherit;
                 font-size: 1rem;
-                line-height: 1.5rem;
                 cursor: pointer;
             }
         }
