@@ -19,6 +19,11 @@ const GlobalStyles = createGlobalStyle`
   a{
     text-decoration: none;
   }
+  header, footer {
+    a:hover, li a:hover {
+      color: ${(props) => props.theme.grey_hover};
+    }
+  }
 `;
 
 ReactDOM.render(
