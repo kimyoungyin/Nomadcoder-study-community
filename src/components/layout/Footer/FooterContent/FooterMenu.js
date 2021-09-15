@@ -10,9 +10,6 @@ const StyledFooterMenu = styled.div`
                 color: inherit;
                 font-size: 1rem;
                 cursor: pointer;
-                /* &:hover {
-                    color: ${(props) => props.theme.grey_hover};
-                } */
             }
         }
     }
