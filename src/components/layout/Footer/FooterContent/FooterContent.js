@@ -8,7 +8,7 @@ const StyledFooterContent = styled.div`
     grid-template-areas: "info info logo";
     gap: 2rem;
 
-    @media (max-width: 1280px) {
+    @media ${(props) => props.theme.tablet} {
         grid-template-areas:
             "info"
             "logo";
@@ -17,7 +17,7 @@ const StyledFooterContent = styled.div`
     .info {
         grid-area: info;
         grid-template-areas: "title menuBox";
-        @media (max-width: 1024px) {
+        @media ${(props) => props.theme.tablet} {
             grid-template-areas:
                 "title"
                 "menuBox";
