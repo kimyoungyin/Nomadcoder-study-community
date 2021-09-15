@@ -7,7 +7,6 @@ const StyledFooterMenu = styled.div`
         li {
             margin-top: 1rem;
             a {
-                text-decoration: none;
                 color: inherit;
                 font-size: 1rem;
                 cursor: pointer;
