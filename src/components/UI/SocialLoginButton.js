@@ -1,27 +1,28 @@
 import React from 'react';
 import Button from './Button';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { theme } from '../../theme';
 
-const Icon = styled.img``;
+const Icon = styled.div`
+  color: white;
+`;
 
 function SocialLoginButton({ provider, icon, children, ...props }) {
-const providers = {
-  github: {
-    background: props.theme.grey_border}, // theme 설정 후, 변경 예정
-    icon: '',
-  },
-};
+  const providers = {
+    github: {
+      background: theme.grey_900,
+    }, // theme 설정 후, 변경 예정
+  };
+
   return (
     <>
       {provider ? (
-        <Button
-          background={providers[provider].background}
-          px={8}
-          py={2}
-          width="20rem"
-          {...props}
-        >
-          <Icon src={providers[provider].icon} />
+        <Button background={providers[provider].background} px={8} py={2} width="20rem" {...props}>
+          <Icon>
+            <FontAwesomeIcon icon={faGithub} />
+          </Icon>
           <span>{children} → </span>
         </Button>
       ) : (
