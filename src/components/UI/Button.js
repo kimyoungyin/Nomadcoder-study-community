@@ -1,22 +1,13 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const shadow = {
-  sm: '0 1px 2px 0 rgba(0,0,0,0.05)',
-  md: '0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)',
-  lg: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
-};
-
 const Button = styled.button`
-  background-color: ${(props) =>
-    props.background ||
-    '#2563EB'}; // theme 파일 merge 후, default color 변경 예정
+  background-color: ${(props) => props.background || props.theme.blue_bold};
   color: ${(props) => props.color || 'white'};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 0.5rem;
-  box-shadow: ${(props) => shadow[props.shadow]};
+  box-shadow: ${(props) => (props.shadow === 'sm' ? props.theme.shadow_sm : props.shadow === 'md' ? props.theme.shadow_md : props.shadow === 'lg' ? props.theme.shadow_lg : '')};
   width: ${(props) => props.width};
   border: none;
   font-weight: ${(props) => props.fw || 500};

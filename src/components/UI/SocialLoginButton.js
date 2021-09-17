@@ -4,14 +4,13 @@ import styled from 'styled-components';
 
 const Icon = styled.img``;
 
+function SocialLoginButton({ provider, icon, children, ...props }) {
 const providers = {
   github: {
-    background: '#374151', // theme 설정 후, 변경 예정
+    background: props.theme.grey_border}, // theme 설정 후, 변경 예정
     icon: '',
   },
 };
-
-function SocialLoginButton({ provider, icon, children, ...props }) {
   return (
     <>
       {provider ? (
