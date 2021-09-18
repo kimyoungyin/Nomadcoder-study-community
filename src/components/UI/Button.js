@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Button = styled.button`
   background-color: ${(props) => props.background || props.theme.blue_bold};
-  color: ${(props) => props.color || 'white'};
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,10 @@ const Button = styled.button`
   cursor: pointer;
   &:hover {
     opacity: 0.75;
+  }
+
+  span {
+    color: ${(props) => props.color || 'white'};
   }
 `;
 
