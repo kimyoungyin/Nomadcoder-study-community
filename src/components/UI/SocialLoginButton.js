@@ -8,7 +8,7 @@ import { theme } from '../../theme';
 
 const SocialStylingButton = styled(Button)`
   svg {
-    color: white;
+    height: 1rem;
     margin-right: 0.5rem;
   }
 `
@@ -18,23 +18,15 @@ function SocialLoginButton({ provider, icon, children, ...props }) {
   const providers = {
     github: {
       background: theme.grey_900,
+      icon: faGithub,
     },
   };
 
   return (
-    <>
-      {provider ? (
         <SocialStylingButton background={providers[provider].background} px={8} py={2} width="20rem" {...props}>
-          <FontAwesomeIcon icon={faGithub} />
+          <FontAwesomeIcon icon={providers[provider].icon} />
           <span>{children} → </span>
         </SocialStylingButton>
-      ) : (
-        <SocialStylingButton {...props}>
-          <img src={icon} />
-          <span>{children} </span>
-        </SocialStylingButton>
-      )}
-    </>
   );
 }
 
