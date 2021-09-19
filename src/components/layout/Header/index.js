@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../logo.svg';
+import Button from '../../UI/Button';
+import logo from '../../../logo.svg';
 const Container = styled.header`
   width: 100%;
   display: flex;
@@ -14,7 +15,12 @@ const PaddingWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.5rem;
+  
+  padding: 0 15rem;
+
+  @media ${props=>props.theme.tablet} {
+    padding: 0 1.5rem;
+  }
 `;
 
 const Logo = styled.img`
@@ -33,14 +39,14 @@ function Header() {
   return (
     <Container>
       <PaddingWrapper>
-        
         <LogoWrapper>
           <Logo src={logo} alt="" />
         </LogoWrapper>
         <ButtonWrapper>
-          {/* 로그인,회원가입 기능 연동 후 반응형 추가 예정 */}
-          <button>Login</button> {/* Button Component Merge 후 변경 예정 */}
-          <button>Join</button>
+          <Button px={8} py={2} background="transparent">Login</Button> 
+          <Button  px={8} py={2} color="white">
+          <span>Join</span> 
+          </Button>
         </ButtonWrapper>
       </PaddingWrapper>
     </Container>
