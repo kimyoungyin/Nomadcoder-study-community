@@ -23,7 +23,6 @@ const Button = styled.button`
     padding-right: ${(props) => (props.px ? `${props.px * 0.25}rem` : "")};
     padding-top: ${(props) => (props.py ? `${props.py * 0.25}rem` : "")};
     padding-bottom: ${(props) => (props.py ? `${props.py * 0.25}rem` : "")};
-    line-height: 1.5rem;
 
     cursor: pointer;
     &:hover {
