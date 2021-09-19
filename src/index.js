@@ -7,13 +7,12 @@ import { theme } from "./theme";
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
-  * {
-    color: ${(props) => props.theme.grey_500};
-  }
-
   body {
     font-family : "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    line-height:1.5rem;
+    * {
+        color: ${(props) => props.theme.grey_500};
+        line-height: 1.5rem;
+    }
   }
 
   li a,
