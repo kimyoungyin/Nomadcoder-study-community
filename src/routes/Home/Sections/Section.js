@@ -15,7 +15,7 @@ const SectionCard = styled(Card)`
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: ${(props) => props.theme.grey_hover};
+            color: ${(props) => props.theme.grey_910};
             word-break: break-all;
         }
         .section-descriptions {
@@ -40,6 +40,7 @@ const SectionCard = styled(Card)`
             .section-comments span {
                 font-size: 1rem;
                 font-weight: 500;
+                margin-left: 0.5rem;
             }
         }
     }
@@ -73,10 +74,10 @@ const Section = ({
                 <div className="section-title">{title}</div>
                 <div className="section-descriptions">
                     <div className="section-category">
-                        in <a>#{category}</a>
+                        in <a href>#{category}</a>
                     </div>
                     <div className="section-owner">
-                        by <a>{owner.username}</a>
+                        by <a href>{owner.username}</a>
                     </div>
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>

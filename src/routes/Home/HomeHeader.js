@@ -9,7 +9,7 @@ const StyledHomeHeader = styled.div`
         font-size: 3rem;
         line-height: 1;
         font-weight: 600;
-        color: ${(props) => props.theme.grey_hover};
+        color: ${(props) => props.theme.grey_910};
     }
     p {
         font-size: 1.25rem;

@@ -23,7 +23,7 @@ const GlobalStyles = createGlobalStyle`
   
   header, footer {
     a:hover, li a:hover {
-      color: ${(props) => props.theme.grey_hover};
+      color: ${(props) => props.theme.grey_910};
     }
   }
 
