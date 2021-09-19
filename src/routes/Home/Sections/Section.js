@@ -1,5 +1,8 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Card from "../../../components/UI/Card";
+import { useState } from "react";
 
 const SectionCard = styled(Card)`
     display: flex;
@@ -7,8 +10,18 @@ const SectionCard = styled(Card)`
     align-items: center;
     .section-likeBox {
         background-color: white;
-        border: 1px solid grey;
+        border: 2px solid ${(props) => (props.isLiked ? "#10b981" : "#d1d5db")};
+        * {
+            color: ${(props) =>
+                props.isLiked ? "#10b981" : props.theme.grey_900};
+        }
+        border-radius: 0.375rem;
         margin-right: 1.25rem;
+        padding: 0 0.75rem;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     .section-data {
         width: 100%;
@@ -19,6 +32,9 @@ const SectionCard = styled(Card)`
             word-break: break-all;
         }
         .section-descriptions {
+            * {
+                color: #4b5563;
+            }
             margin-top: 0.375rem;
             display: flex;
             flex-wrap: wrap;
@@ -48,11 +64,18 @@ const SectionCard = styled(Card)`
         width: 3.5rem;
         border-radius: 50%;
     }
+    .section-likeBox,
+    .section-title,
+    a,
+    img {
+        cursor: pointer;
+    }
 `;
 
 const Section = ({
     section: { isMain, up, title, category, owner, createdAt, comments },
 }) => {
+    const [isLiked, setIsLiked] = useState(false);
     const calculateTerm = (createdAt) => {
         const gap = Date.now() - createdAt;
         if (gap >= 604800000) {
@@ -66,18 +89,30 @@ const Section = ({
         }
     };
     return (
-        <SectionCard as="section" isMain={isMain}>
-            <button className="section-likeBox">
+        <SectionCard as="section" isMain={isMain} isLiked={isLiked}>
+            <div
+                className="section-likeBox"
+                onClick={() => setIsLiked((isLiked) => !isLiked)}
+            >
+                <FontAwesomeIcon icon={faAngleUp} />
                 <div>{up}</div>
-            </button>
+            </div>
             <div className="section-data">
-                <div className="section-title">{title}</div>
+                <div className="section-title" onClick={() => {}}>
+                    {title}
+                </div>
                 <div className="section-descriptions">
                     <div className="section-category">
-                        in <a href>#{category}</a>
+                        in{" "}
+                        <a href onClick={() => {}}>
+                            #{category}
+                        </a>
                     </div>
                     <div className="section-owner">
-                        by <a href>{owner.username}</a>
+                        by{" "}
+                        <a href onClick={() => {}}>
+                            {owner.username}
+                        </a>
                     </div>
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
@@ -87,7 +122,11 @@ const Section = ({
                     </div>
                 </div>
             </div>
-            <img src={owner.avatarUrl} alt={owner.username} />
+            <img
+                src={owner.avatarUrl}
+                alt={owner.username}
+                onClick={() => {}}
+            />
         </SectionCard>
     );
 };
