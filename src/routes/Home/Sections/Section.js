@@ -22,6 +22,7 @@ const SectionCard = styled(Card)`
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
     .section-data {
         width: 100%;
