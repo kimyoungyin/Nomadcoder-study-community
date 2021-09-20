@@ -1,4 +1,5 @@
 import firebase from "firebase/compat/app";
+import "firebase/auth";
 
 var firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -10,4 +11,12 @@ var firebaseConfig = {
     appId: process.env.REACT_APP_APP_ID,
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
+
 firebase.initializeApp(firebaseConfig);
+
+
+export const Providers = {
+    github: new firebase.auth.GithubAuthProvider()
+}
+
+export const authService = firebase.auth();
