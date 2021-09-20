@@ -3,7 +3,7 @@ const DUMMY_SECTIONS = [
         isMain: true,
         up: 25,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
-        category: "interview",
+        category: "go",
         owner: {
             username: "kimyoungyin",
             avatarUrl:
@@ -16,7 +16,7 @@ const DUMMY_SECTIONS = [
         isMain: false,
         up: 15,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
-        category: "javascript",
+        category: "insta_clone",
         owner: {
             username: "kimyoungyin",
             avatarUrl:
@@ -30,6 +30,7 @@ const DUMMY_SECTIONS = [
         up: 5,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
         category: "javascript",
+
         owner: {
             username: "kimyoungyin",
             avatarUrl:
@@ -42,7 +43,8 @@ const DUMMY_SECTIONS = [
         isMain: false,
         up: 35,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
-        category: "javascript",
+        category: "react",
+
         owner: {
             username: "kimyoungyin",
             avatarUrl:

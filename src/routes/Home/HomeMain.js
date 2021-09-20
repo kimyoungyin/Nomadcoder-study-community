@@ -32,6 +32,10 @@ const ButtonGrid = styled.div`
 
 const HomeMain = () => {
     const [categoryFilter, setCategoryFilter] = useState("all");
+
+    const changeFilter = (newCategory) => {
+        setCategoryFilter(newCategory);
+    };
     const filterSections = (category) => {
         if (category === "all") {
             return DUMMY_SECTIONS;
@@ -45,7 +49,7 @@ const HomeMain = () => {
         <HomeMainLayout>
             <Categories
                 category={categoryFilter}
-                onCategoryChange={setCategoryFilter}
+                onCategoryChange={changeFilter}
             />
             <Sections filteredSections={filterSections(categoryFilter)} />
             <ButtonGrid>
