@@ -5,6 +5,9 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import App from "./App";
 import { theme } from "./theme";
+import { RecoilRoot } from 'recoil'; 
+
+
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
@@ -31,12 +34,12 @@ const GlobalStyles = createGlobalStyle`
 
 ReactDOM.render(
     <React.StrictMode>
-        <RecoilRoot>
-            <ThemeProvider theme={theme}>
-                <GlobalStyles />
-                <App />
-            </ThemeProvider>
-        </RecoilRoot>
+        <ThemeProvider theme={theme}>
+            <GlobalStyles />
+                <RecoilRoot>
+                  <App />
+                </RecoilRoot>
+        </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

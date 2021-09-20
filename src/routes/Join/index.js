@@ -5,6 +5,10 @@ import Button from '../../components/UI/Button'
 import SocialLoginButton from '../../components/UI/SocialLoginButton'
 import HorizonLine from '../../components/HorizonLine'
 import useInput from '../../Hooks/useInput'
+import { useSetRecoilState } from 'recoil'
+import authState from '../../Hooks/auth'
+import { useHistory } from 'react-router'
+import { authService } from '../../fb'
 
 const Container = styled.div`
   display: flex;
@@ -50,8 +54,26 @@ const Input = styled.input`
 
 
 function Join() {  
+  const setAuth = useSetRecoilState(authState);
+  const history = useHistory();
   const email = useInput('');
   const password = useInput('');
+
+
+  const submitHandler = async (e) =>{
+    e.preventDefault();
+    try{
+      const auth = await authService.createUserWithEmailAndPassword(email, password);
+
+      if(auth.user){
+        setAuth(auth.user);
+        history.push('/');
+      }
+    } catch(error){
+      console.log(error)
+    }
+  }
+  
 
   return (
     <Container>
@@ -60,12 +82,12 @@ function Join() {
       </Title>
       <Wrapper>
         <Card style={{width: "100%"}}>
-          <Form>
+          <Form onSubmit={submitHandler} >
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="text" {...email} />
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" {...password} />
-              <Button py={3}>
+              <Button py={3} type="submit">
                 <span>Continue</span>
               </Button>
           </Form>
