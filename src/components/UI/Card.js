@@ -5,7 +5,7 @@ const Card = styled.div`
     border-radius: ${(props) => (props.isAuth ? "0.5rem" : "0.375rem")};
     background-color: ${(props) =>
         props.isMain ? props.theme.yellow : "white"};
-    margin-bottom: ${(props) => (props.isMain ? "0.75rem" : null)};
+    margin-bottom: 0.75rem;
     box-shadow: ${(props) => props.theme.shadow_lg};
 `;
 

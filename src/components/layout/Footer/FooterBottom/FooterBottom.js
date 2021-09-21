@@ -24,7 +24,7 @@ const StyledFooterBottom = styled.div`
             color: inherit;
             font-size: 1.33333em;
             &:hover path {
-                color: ${(props) => props.theme.grey_hover};
+                color: ${(props) => props.theme.grey_910};
             }
         }
     }

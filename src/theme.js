@@ -3,6 +3,7 @@ export const theme = {
     blue_bold: "#2563EB", // blue 진한 버튼
     grey_910: "#112827", // hover 글자색
     grey_900: "#374151", // header 기본 색
+    grey_800: "#1f2937",
     grey_500: "#6b7280", // default(수정함)
     grey_400: "#9CA3AF", //  footer title, p, span
     grey_border: "#E5E7EB", // header, footer border
