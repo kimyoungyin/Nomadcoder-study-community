@@ -46,7 +46,7 @@ const StyledCategories = styled.aside`
 
 const Categories = ({ courses }) => {
     const category = useRecoilValue(homeCategoryState);
-
+    // 카테고리별 글 개수도 firebase 사용 시 추가할 예정
     return (
         <StyledCategories active={category}>
             <h3>카테고리</h3>
