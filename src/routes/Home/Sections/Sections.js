@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { sectionsState } from "../../../recoil/homeRecoil";
+import { sectionsSelector } from "../../../recoil/homeRecoil";
 import Section from "./Section";
 import Sorter from "./Sorter";
 
@@ -9,7 +9,7 @@ const SectionsGrid = styled.div`
 `;
 
 const Sections = () => {
-    const processedSections = useRecoilValue(sectionsState);
+    const processedSections = useRecoilValue(sectionsSelector);
 
     return (
         <SectionsGrid>

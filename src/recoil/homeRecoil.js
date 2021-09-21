@@ -13,7 +13,7 @@ export const homeSortState = atom({
 
 // 더미 데이터가 아니라 firebase로 가져올 때 sections를 atom으로 받아올 예정
 
-export const sectionsState = selector({
+export const sectionsSelector = selector({
     key: "sections",
     get: ({ get }) => {
         const category = get(homeCategoryState);
