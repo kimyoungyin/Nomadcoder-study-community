@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import App from "./App";

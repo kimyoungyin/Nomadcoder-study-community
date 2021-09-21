@@ -6,13 +6,17 @@ const Container = styled.div`
     width: 100%;
     text-align: center;
     border: none;
-    border-bottom: 2px solid ${props=>props.theme.grey_400};
-    line-height: 0.1em;
+    border-bottom: 2px solid ${props=>props.theme.grey_200};
     margin: 10px 0 20px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 0.1rem;
 
     span {
       background-color: white;
       padding: 0 10px;
+      line-height: 0.1rem;
+
     }
   `
 
