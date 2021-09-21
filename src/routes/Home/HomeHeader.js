@@ -1,6 +1,6 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import useInput from "../../Hooks/useInput";
 import { searchInputState } from "../../recoil/homeRecoil";
@@ -56,8 +56,8 @@ const StyledSearchBox = styled.div`
 `;
 
 const HomeHeader = ({ categoryObj, isSearch }) => {
-    const [searchInput, setSearchInput] = useRecoilState(searchInputState);
-    const Input = useInput(searchInput);
+    const setSearchInput = useSetRecoilState(searchInputState);
+    const Input = useInput("");
 
     const searchInputSubmitHandler = (event) => {
         event.preventDefault();
