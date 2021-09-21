@@ -1,9 +1,7 @@
-import DUMMY_SECTIONS from "./Sections/dummyData";
 import styled from "styled-components";
 import Button from "../../components/UI/Button";
 import Categories from "./Categories";
 import Sections from "./Sections/Sections";
-import { useState } from "react";
 
 const HomeMainLayout = styled.main`
     padding: 0 2rem 10rem;
@@ -30,28 +28,11 @@ const ButtonGrid = styled.div`
     }
 `;
 
-const HomeMain = () => {
-    const [categoryFilter, setCategoryFilter] = useState("all");
-
-    const changeFilter = (newCategory) => {
-        setCategoryFilter(newCategory);
-    };
-    const filterSections = (category) => {
-        if (category === "all") {
-            return DUMMY_SECTIONS;
-        } else {
-            return DUMMY_SECTIONS.filter(
-                (section) => section.category === category
-            );
-        }
-    };
+const HomeMain = ({ courses }) => {
     return (
         <HomeMainLayout>
-            <Categories
-                category={categoryFilter}
-                onCategoryChange={changeFilter}
-            />
-            <Sections filteredSections={filterSections(categoryFilter)} />
+            <Categories courses={courses} />
+            <Sections />
             <ButtonGrid>
                 <Button shadow="md" fw={400} py={2} onClick={() => {}}>
                     {/* upload route로 이동 */}

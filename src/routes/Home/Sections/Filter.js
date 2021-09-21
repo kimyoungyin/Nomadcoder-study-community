@@ -1,6 +1,9 @@
 import { faBolt, faFire, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { homeCategoryState, homeSortState } from "../../../recoil/homeRecoil";
 
 const StyledFilter = styled.div`
     margin-bottom: 1rem;
@@ -14,7 +17,7 @@ const StyledFilter = styled.div`
         span {
             margin-right: 0.5rem;
         }
-        button {
+        a {
             background-color: inherit;
             border: none;
             padding: 1px 0.5rem;
@@ -31,26 +34,25 @@ const StyledFilter = styled.div`
 `;
 
 const Filter = ({ type, onTypeChange }) => {
+    const sorter = useRecoilValue(homeSortState);
+    const category = useRecoilValue(homeCategoryState);
     return (
-        <StyledFilter type={type}>
+        <StyledFilter type={sorter}>
             <div className="filter-type">
                 <span>Sort by</span>
-                <button
-                    className="popular"
-                    onClick={() => onTypeChange("popular")}
-                >
+                <Link to={`/${category}?sort=popular`} className="popular">
                     <FontAwesomeIcon icon={faFire} />
                     Popular
-                </button>
-                <button className="new" onClick={() => onTypeChange("new")}>
+                </Link>
+                <Link to={`/${category}`} className="new">
                     <FontAwesomeIcon icon={faBolt} />
                     New
-                </button>
+                </Link>
             </div>
-            <a href>
+            <Link to="/search">
                 <FontAwesomeIcon icon={faSearch} />
                 Search
-            </a>
+            </Link>
         </StyledFilter>
     );
 };

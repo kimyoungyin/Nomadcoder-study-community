@@ -17,11 +17,15 @@ const StyledHomeHeader = styled.div`
     }
 `;
 
-const HomeHeader = () => {
+const HomeHeader = ({ categoryObj }) => {
     return (
         <StyledHomeHeader>
-            <h2>Community</h2>
-            <p>개발자 99% 커뮤니티에서 수다 떨어요!</p>
+            <h2>{categoryObj ? `#${categoryObj.category}` : "Community"}</h2>
+            <p>
+                {categoryObj
+                    ? categoryObj.description
+                    : "개발자 99% 커뮤니티에서 수다 떨어요!"}
+            </p>
         </StyledHomeHeader>
     );
 };

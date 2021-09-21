@@ -1,5 +1,7 @@
-import NOMAD_COURSES from "../Courses";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { homeCategoryState } from "../../recoil/homeRecoil";
+import { useRecoilValue } from "recoil";
 
 const StyledCategories = styled.aside`
     grid-area: Categories;
@@ -42,37 +44,27 @@ const StyledCategories = styled.aside`
     }
 `;
 
-const Categories = ({ category, onCategoryChange }) => {
-    console.log(category);
-    const categoryClickHandler = (event) => {
-        const {
-            currentTarget: { id },
-        } = event;
-        onCategoryChange(id);
-    };
+const Categories = ({ courses }) => {
+    const category = useRecoilValue(homeCategoryState);
+
     return (
         <StyledCategories active={category}>
             <h3>카테고리</h3>
-            <ul className="category-box">
-                <li
-                    key={0}
-                    className="category"
-                    id="all"
-                    onClick={categoryClickHandler}
-                >
+            <div className="category-box">
+                <Link to="/" key={0} className="category" id="all">
                     <span>#</span> <span>all</span>
-                </li>
-                {NOMAD_COURSES.map((item, index) => (
-                    <li
+                </Link>
+                {courses.map((item, index) => (
+                    <Link
+                        to={`/${item.category}`}
                         key={index + 1}
                         className="category"
                         id={item.category}
-                        onClick={categoryClickHandler}
                     >
                         <span>#</span> <span>{item.category}</span>
-                    </li>
+                    </Link>
                 ))}
-            </ul>
+            </div>
         </StyledCategories>
     );
 };

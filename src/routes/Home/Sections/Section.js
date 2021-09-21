@@ -3,6 +3,7 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Card from "../../../components/UI/Card";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const SectionCard = styled(Card)`
     display: flex;
@@ -99,21 +100,19 @@ const Section = ({
                 <div>{up}</div>
             </div>
             <div className="section-data">
-                <div className="section-title" onClick={() => {}}>
+                <Link to={`/thread/${title.up}`} className="section-title">
+                    {/* url 아이디는 이후 firebase id를 부여받으면 치환 예정 */}
                     {title}
-                </div>
+                </Link>
                 <div className="section-descriptions">
                     <div className="section-category">
-                        in{" "}
-                        <a href onClick={() => {}}>
-                            #{category}
-                        </a>
+                        in <Link to={`/${category}`}>#{category}</Link>
                     </div>
                     <div className="section-owner">
                         by{" "}
-                        <a href onClick={() => {}}>
+                        <Link to={`/users/${owner.username}`}>
                             {owner.username}
-                        </a>
+                        </Link>
                     </div>
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
