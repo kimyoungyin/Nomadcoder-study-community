@@ -30,7 +30,6 @@ const DUMMY_SECTIONS = [
         up: 5,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
         category: "javascript",
-
         owner: {
             username: "kimyoungyin",
             avatarUrl:
@@ -44,7 +43,6 @@ const DUMMY_SECTIONS = [
         up: 35,
         title: "뭐라고 제목을 정해야 할지 모르겠네요. 일단 긴 제목으로 해볼게요",
         category: "react",
-
         owner: {
             username: "kimyoungyin",
             avatarUrl:
