@@ -5,21 +5,27 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { homeCategoryState, homeSortState } from "../../../recoil/homeRecoil";
 
-const StyledFilter = styled.div`
+const StyledSorter = styled.div`
     margin-bottom: 1rem;
     margin-top: -2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .filter-type {
+    flex-wrap: nowrap;
+    font-size: 0.875rem;
+    a {
+        color: ${(props) => props.theme.grey_400};
+    }
+    svg {
+        margin: 0 0.3rem;
+    }
+    .sorter-type {
         display: flex;
         align-items: center;
         span {
             margin-right: 0.5rem;
         }
         a {
-            background-color: inherit;
-            border: none;
             padding: 1px 0.5rem;
             margin-right: 0.25rem;
             &.${(props) => props.type} {
@@ -33,12 +39,12 @@ const StyledFilter = styled.div`
     }
 `;
 
-const Filter = ({ type, onTypeChange }) => {
+const Sorter = ({ type, onTypeChange }) => {
     const sorter = useRecoilValue(homeSortState);
     const category = useRecoilValue(homeCategoryState);
     return (
-        <StyledFilter type={sorter}>
-            <div className="filter-type">
+        <StyledSorter type={sorter}>
+            <div className="sorter-type">
                 <span>Sort by</span>
                 <Link to={`/${category}?sort=popular`} className="popular">
                     <FontAwesomeIcon icon={faFire} />
@@ -53,8 +59,8 @@ const Filter = ({ type, onTypeChange }) => {
                 <FontAwesomeIcon icon={faSearch} />
                 Search
             </Link>
-        </StyledFilter>
+        </StyledSorter>
     );
 };
 
-export default Filter;
+export default Sorter;

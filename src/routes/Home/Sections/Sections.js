@@ -1,8 +1,8 @@
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { sectionsState } from "../../../recoil/homeRecoil";
-import Filter from "./Filter";
 import Section from "./Section";
+import Sorter from "./Sorter";
 
 const SectionsGrid = styled.div`
     grid-area: Sections;
@@ -13,7 +13,7 @@ const Sections = () => {
 
     return (
         <SectionsGrid>
-            <Filter />
+            <Sorter />
             {processedSections.map((section, index) => (
                 <Section key={index} section={section} />
             ))}
