@@ -33,7 +33,6 @@ const Home = ({ match, location }) => {
 
         setSorter(sortQuery);
         setCategoryState(categoryParams);
-        console.log("rerendered");
         window.scroll({ top: 0, behavior: "smooth" });
     }, [match.params.category, location.search]);
 
@@ -43,6 +42,7 @@ const Home = ({ match, location }) => {
                 categoryObj={NOMAD_COURSES.find(
                     (obj) => obj.category === categoryState
                 )}
+                isSearch={categoryState === "search"}
             />
             <HomeMain courses={NOMAD_COURSES} />
         </Homelayout>

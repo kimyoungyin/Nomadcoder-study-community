@@ -11,6 +11,11 @@ export const homeSortState = atom({
     default: "new",
 });
 
+export const searchInputState = atom({
+    key: "searchInput",
+    default: "",
+});
+
 // 더미 데이터가 아니라 firebase로 가져올 때 sections를 atom으로 받아올 예정
 
 export const sectionsSelector = selector({
@@ -18,6 +23,7 @@ export const sectionsSelector = selector({
     get: ({ get }) => {
         const category = get(homeCategoryState);
         const sorter = get(homeSortState);
+        const searchInput = get(searchInputState);
 
         const sortSections = (a, b) => {
             if (a.isMain) return -1;
@@ -34,9 +40,15 @@ export const sectionsSelector = selector({
         };
 
         let filteredSections = [];
-        if (category === "all") {
+        if (category === "search") {
+            filteredSections = searchInput
+                ? DUMMY_SECTIONS.filter((obj) =>
+                      obj.title.includes(searchInput)
+                  )
+                : [];
+            // console.log(filteredSections);
+        } else if (category === "all") {
             filteredSections = [...DUMMY_SECTIONS];
-            // 깊은 복사를 하면 strictMode에 걸림
         } else {
             filteredSections = DUMMY_SECTIONS.filter(
                 (obj) => obj.category === category
