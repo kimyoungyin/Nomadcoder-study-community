@@ -1,9 +1,10 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Title = styled.h2`
   font-size: 1.875rem;
   font-weight: 600;
-  color: ${props=>props.theme.grey_910};
-`
+  text-align: center;
+  color: ${(props) => props.theme.grey_910};
+`;
 
-export default Title
+export default Title;

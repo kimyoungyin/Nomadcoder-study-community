@@ -37,7 +37,6 @@ const Wrapper = styled.div`
 
 const Linker = styled.div`
   display: none;
-  margin-top: 2.5rem;
   text-align: center;
 
   span {
