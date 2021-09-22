@@ -12,14 +12,12 @@ const Router = () => {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
-        {!isLoggedIn && (
-          <>
-            <Route exact path="/join" component={Join} />
-            <Route path="/login" component={Login} />
-          </>
-        )}
-        <Route path="/:category([^((login)|(join))])" component={Home} />
-        <Redirect to="/" />
+        <Route exact path="/join">
+          {isLoggedIn ? <Redirect to="/" /> : <Join />}
+        </Route>
+        <Route path="/login">{isLoggedIn ? <Redirect to="/" /> : <Login />}</Route>
+
+        <Route path="/:category" component={Home} />
         {/* <Route path="/search" component={Home} />
                 <Route path="/users/:id" component={Home} /> */}
       </Switch>
