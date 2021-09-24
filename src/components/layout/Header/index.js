@@ -11,6 +11,7 @@ const Container = styled.header`
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 4rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 `;
@@ -20,11 +21,10 @@ const PaddingWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-
-  padding: 0 15rem;
-
+  max-width: 80rem;
+  padding: 0 .5rem;
   @media ${(props) => props.theme.tablet} {
-    padding: 0 1.5rem;
+    padding: 0 2rem;
   }
 `;
 
