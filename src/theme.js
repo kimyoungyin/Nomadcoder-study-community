@@ -7,6 +7,7 @@ export const theme = {
     grey_500: "#6b7280", // default(수정함)
     grey_400: "#9CA3AF", //  footer title, p, span
     grey_200: "#E5E7EB", // horizon line 
+    grey_100: "#F3F4F6",
     grey_border: "#E5E7EB", // header, footer border
     yellow: "rgb(254,252,232)",
 

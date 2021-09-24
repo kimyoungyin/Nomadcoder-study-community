@@ -1,15 +1,17 @@
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import Header from './components/layout/Header';
 import { isLoggedInState } from './recoil/authRecoil';
 import Home from './routes/Home';
 import Join from './routes/Join';
 import Login from './routes/Login';
 
 const Router = () => {
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  const isLoggedIn = useRecoilValue(isLoggedInState);
 
   return (
     <BrowserRouter>
+      <Header />
       <Switch>
         <Route path="/" exact component={Home} />
         <Route exact path="/join">
