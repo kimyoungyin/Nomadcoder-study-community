@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../components/UI/Button";
 import Categories from "./Categories";
@@ -29,15 +30,18 @@ const ButtonGrid = styled.div`
 `;
 
 const HomeMain = ({ courses }) => {
+
+
     return (
         <HomeMainLayout>
             <Categories courses={courses} />
             <Sections />
             <ButtonGrid>
-                <Button shadow="md" fw={400} py={2} onClick={() => {}}>
-                    {/* upload route로 이동 */}
-                    <span>글쓰기</span>
-                </Button>
+                <Link to="/post">
+                    <Button shadow="md" fw={400} py={2}>
+                        <span>글쓰기</span>
+                    </Button>
+                </Link>
             </ButtonGrid>
         </HomeMainLayout>
     );
