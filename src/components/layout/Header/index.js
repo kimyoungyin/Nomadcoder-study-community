@@ -22,8 +22,8 @@ const PaddingWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: 80rem;
-  padding: 0 .5rem;
-  @media ${(props) => props.theme.tablet} {
+  padding: 0 1.5rem;
+  @media (min-width: 1024px) {
     padding: 0 2rem;
   }
 `;
@@ -101,7 +101,9 @@ function Header() {
     <Container>
       <PaddingWrapper>
         <LogoWrapper>
+          <Link to="/">
           <Logo src={logo} alt="" />
+          </Link>
         </LogoWrapper>
         <ButtonWrapper>
           {!isLoggedIn ? (
