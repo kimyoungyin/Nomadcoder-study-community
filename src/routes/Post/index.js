@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Editor from '../../components/Editor';
 import Input from '../../components/UI/Input'
+import useInput from '../../Hooks/useInput';
+import Button from '../../components/UI/Button';
+import { theme } from '../../theme';
 import NOMAD_COURSES from '../Courses';
+import { dbService } from '../../fb';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../recoil/authRecoil';
+import { useHistory } from 'react-router';
 
 const Container = styled.div`
   display: flex;
@@ -69,16 +76,60 @@ const CategorySelect = styled.select`
   background-size: 1.5em 1.5em;
 `
 
+const PostButton = styled(Button)`
+  width: 100%;
+  margin-top: 2rem;
+` 
+
 function Post() {
-  
+  const user = useRecoilValue(authState);
+  const title = useInput('', (title) => title.length <= 80 );
+  const [category, setCategory] = useState('');
+  const [threadContent, setThreadContent] = useState('');
+  const history = useHistory();
+  const categoryChangeHandler = (e) => {
+    setCategory(e.target.value);    
+  }
+  const contentChangeHandler = (data) => {
+    setThreadContent(data);
+  }
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if(title.value.length < 10){
+      alert('제목은 10글자 이상 작성해주세요.');
+      return;
+    } else if(category === ''){
+      alert('카테고리를 선택해주세요.');
+      return;
+    }
+    
+    try{
+      await dbService.collection("threads").add({
+        category: category,
+        isPinned: false,
+        uid: user.uid,
+        likes: [],
+        comments: [],
+        title: title.value,
+        content: threadContent,
+        createdAt: Date.now(),
+      });
+      setCategory('');
+      setThreadContent('');
+      history.push('/');
+  } catch(error) {
+      console.log(error);
+    }
+  }
   return (
     <Container>
       <Title>글쓰기</Title>
       <EditorWrapper>   
-        <Form>
-          <PostInput placeholder="제목 쓰기" />
+        <Form onSubmit={submitHandler}>
+          <PostInput placeholder="제목 쓰기" {...title} />
           <TitleNotice>Min. 10. Max. 80</TitleNotice>
-          <CategorySelect>
+          <CategorySelect value={category} onChange={categoryChangeHandler} >
           <option value="placeholder">카테고리 고르기</option>
             {NOMAD_COURSES.map((course) => {
               return(
@@ -86,7 +137,8 @@ function Post() {
               )})}
           </CategorySelect>
 
-          <Editor />
+          <Editor onChange={contentChangeHandler} />
+          <PostButton py={2} background={theme.blue_light}><span>등록</span></PostButton>
         </Form> 
       </EditorWrapper>
     </Container>
