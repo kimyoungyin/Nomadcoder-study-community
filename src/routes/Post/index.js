@@ -113,6 +113,7 @@ function Post() {
         category: category,
         isPinned: false,
         likes: [],
+        likesNum: 0,
         comments: [],
         title: title.value,
         content: threadContent,
