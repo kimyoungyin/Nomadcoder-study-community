@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Editor from '../../components/Editor';
 import Input from '../../components/UI/Input'
 import NOMAD_COURSES from '../Courses';
 
@@ -84,6 +85,8 @@ function Post() {
               <option value={course.category} key={course.category}>{course.category}</option>
               )})}
           </CategorySelect>
+
+          <Editor />
         </Form> 
       </EditorWrapper>
     </Container>
