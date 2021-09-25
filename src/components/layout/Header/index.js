@@ -79,7 +79,7 @@ const AvatarModalBlock = styled.a`
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
-  const setAuth = useSetRecoilState(authState);
+  const [user, setAuth] = useRecoilState(authState);
   const [showModal, setShowModal] = useState(false);
 
   const toggleModalHandler = () => {
@@ -96,7 +96,6 @@ function Header() {
       console.log(error)
     }
   }
-
   return (
     <Container>
       <PaddingWrapper>
@@ -117,7 +116,7 @@ function Header() {
             </>
           ) : (
             <Avatar onClick={toggleModalHandler}>
-              <img src="https://d1telmomo28umc.cloudfront.net/media/public/avatars/zih0-1612321695.jpg" alt="test-avatar" />
+              {user && <img src={user.photoURL} alt="avatar"/>}
               {showModal && (
                 <AvatarModal>
                 <AvatarModalBlock href="#">Edit Profile</AvatarModalBlock>

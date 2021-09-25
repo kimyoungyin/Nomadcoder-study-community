@@ -31,7 +31,7 @@ function AuthForm({ authType }) {
   const history = useHistory();
   const email = useInput('');
   const password = useInput('');
-
+  const displayName = useInput('');
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -43,6 +43,10 @@ function AuthForm({ authType }) {
       }
 
       if (auth.user) {
+        await auth.user.updateProfile({
+          photoURL: 'https://user-images.githubusercontent.com/60956392/134771392-91df7598-a7e8-4870-909e-737afd4bb52f.png',
+          displayName: displayName.value
+        })
         setAuth(auth.user);
         history.push('/');
       }
@@ -57,6 +61,12 @@ function AuthForm({ authType }) {
       <Input id="email" type="text" {...email} />
       <Label htmlFor="password">Password</Label>
       <Input id="password" type="password" {...password} />
+      {authType === 'join' && (
+        <> 
+          <Label htmlFor="displayName">Nickname</Label>
+          <Input id="displayName" type="displayName" {...displayName} />
+        </>
+      )}
       <Button py={3} type="submit">
         <span>Continue</span>
       </Button>
