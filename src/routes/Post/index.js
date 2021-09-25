@@ -106,9 +106,12 @@ function Post() {
     
     try{
       await dbService.collection("threads").add({
+        owner: {
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        },
         category: category,
         isPinned: false,
-        uid: user.uid,
         likes: [],
         comments: [],
         title: title.value,
