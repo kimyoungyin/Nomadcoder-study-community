@@ -75,7 +75,16 @@ const SectionCard = styled(Card)`
 `;
 
 const Section = ({
-    section: { isMain, up, title, category, owner, createdAt, comments },
+    section: {
+        docId,
+        isPinned,
+        likesNum,
+        title,
+        category,
+        createdAt,
+        owner,
+        // comments,
+    },
 }) => {
     const [isLiked, setIsLiked] = useState(false);
     const calculateTerm = (createdAt) => {
@@ -91,16 +100,16 @@ const Section = ({
         }
     };
     return (
-        <SectionCard as="section" isMain={isMain} isLiked={isLiked}>
+        <SectionCard as="section" isMain={isPinned} isLiked={isLiked}>
             <div
                 className="section-likeBox"
                 onClick={() => setIsLiked((isLiked) => !isLiked)}
             >
                 <FontAwesomeIcon icon={faAngleUp} />
-                <div>{up}</div>
+                <div>{likesNum}</div>
             </div>
             <div className="section-data">
-                <Link to={`/thread/${title.up}`} className="section-title">
+                <Link to={`/thread/${docId}`} className="section-title">
                     {/* url 아이디는 이후 firebase id를 부여받으면 치환 예정 */}
                     {title}
                 </Link>
@@ -110,23 +119,23 @@ const Section = ({
                     </div>
                     <div className="section-owner">
                         by{" "}
-                        <Link to={`/users/${owner.username}`}>
-                            {owner.username}
+                        <Link to={`/users/${owner.displayName}`}>
+                            {owner.displayName}
                         </Link>
                     </div>
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
                     <span className="section-dot">•</span>
-                    <div className="section-comments">
+                    {/* <div className="section-comments">
                         💬 <span>{comments.length}</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
-            <img
+            {/* <img
                 src={owner.avatarUrl}
                 alt={owner.username}
                 onClick={() => {}}
-            />
+            /> */}
         </SectionCard>
     );
 };

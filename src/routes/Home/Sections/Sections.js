@@ -1,5 +1,8 @@
+import { collection, getDocs, query, where } from "@firebase/firestore";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { db } from "../../../fb";
 import { sectionsSelector } from "../../../recoil/homeRecoil";
 import Section from "./Section";
 import Sorter from "./Sorter";

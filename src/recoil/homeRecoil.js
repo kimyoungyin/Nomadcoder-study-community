@@ -1,5 +1,15 @@
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    where,
+} from "@firebase/firestore";
 import { atom, selector } from "recoil";
-import DUMMY_SECTIONS from "../routes/Home/Sections/dummyData";
+import { db } from "../fb";
 
 export const homeCategoryState = atom({
     key: "homeCategory",
@@ -16,45 +26,61 @@ export const searchInputState = atom({
     default: "",
 });
 
-// 더미 데이터가 아니라 firebase로 가져올 때 sections를 atom으로 받아올 예정
-
 export const sectionsSelector = selector({
     key: "sections",
-    get: ({ get }) => {
+    get: async ({ get }) => {
         const category = get(homeCategoryState);
         const sorter = get(homeSortState);
         const searchInput = get(searchInputState);
 
-        const sortSections = (a, b) => {
-            if (a.isMain) return -1;
-            if (sorter === "new") {
-                if (a.createdAt > b.createdAt) return -1;
-                if (a.createdAt === b.createdAt) return 0;
-                if (a.createdAt < b.createdAt) return 1;
-            }
-            if (sorter === "popular") {
-                if (a.up > b.up) return -1;
-                if (a.up === b.up) return 0;
-                if (a.up < b.up) return 1;
-            }
-        };
+        const threadsRef = collection(db, "threads");
+        const pinnedCondition = where("isPinned", "==", true);
+        const notPinnedCondition = where("isPinned", "==", false);
+        let categoryCondition = null;
+        let sortCondition = orderBy("createdAt", "desc");
+        let q1 = null;
+        let q2 = null;
+        let processedSections = [];
 
-        let filteredSections = [];
-        if (category === "search") {
-            filteredSections = searchInput
-                ? DUMMY_SECTIONS.filter((obj) =>
-                      obj.title.includes(searchInput)
-                  )
-                : [];
-            // console.log(filteredSections);
-        } else if (category === "all") {
-            filteredSections = [...DUMMY_SECTIONS];
-        } else {
-            filteredSections = DUMMY_SECTIONS.filter(
-                (obj) => obj.category === category
-            );
+        if (sorter === "popular") {
+            sortCondition = orderBy("likesNum", "desc");
         }
-        const processedSections = filteredSections.sort(sortSections);
+
+        if (category !== "all") {
+            categoryCondition = where("category", "==", category);
+            q1 = query(
+                threadsRef,
+                categoryCondition,
+                pinnedCondition,
+                sortCondition
+            );
+            q2 = query(
+                threadsRef,
+                categoryCondition,
+                notPinnedCondition,
+                sortCondition
+            );
+        } else {
+            q1 = query(threadsRef, pinnedCondition, sortCondition);
+            q2 = query(threadsRef, notPinnedCondition, sortCondition);
+        }
+
+        const pinnedSections = await getDocs(q1);
+        const notPinnedSections = await getDocs(q2);
+        pinnedSections.forEach((doc) =>
+            processedSections.push({
+                docId: doc.id,
+                ...doc.data(),
+            })
+        );
+        console.log(processedSections);
+        notPinnedSections.forEach((doc) =>
+            processedSections.push({
+                docId: doc.id,
+                ...doc.data(),
+            })
+        );
+        console.log(processedSections);
         return processedSections;
     },
 });

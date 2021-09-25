@@ -1,5 +1,8 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import firebase from "firebase/compat/app";
+import { getFirestore } from "firebase/firestore";
+// import { addDoc, collection } from "firebase/firestore";
+
+import "firebase/compat/auth";
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTHDOMAIN,
@@ -7,16 +10,16 @@ const firebaseConfig = {
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_SENDER_ID,
     appId: process.env.REACT_APP_APP_ID,
-    measurementId: process.env.REACT_APP_MEASUREMENT
-  };
+    measurementId: process.env.REACT_APP_MEASUREMENT,
+};
 
 firebase.initializeApp(firebaseConfig);
 
-
 export const Providers = {
-    github: new firebase.auth.GithubAuthProvider()
-}
+    github: new firebase.auth.GithubAuthProvider(),
+};
 
 export const authService = firebase.auth();
+export const db = getFirestore();
 
 export default firebase;
