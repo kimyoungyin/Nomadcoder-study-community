@@ -37,7 +37,6 @@ export const sectionsSelector = selector({
         const category = get(homeCategoryState);
         const sorter = get(homeSortState);
         const searchInput = get(searchInputState);
-
         const threadsRef = collection(db, "threads");
         const pinnedCondition = where("isPinned", "==", true);
         const notPinnedCondition = where("isPinned", "==", false);
@@ -85,19 +84,21 @@ export const sectionsSelector = selector({
                     ...doc.data(),
                 })
             );
-        } else if (category === "search" && searchInput !== "") {
+        } else if (category === "search") {
             const searchSections = await getDocs(threadsRef, sortCondition);
-            searchSections.forEach((doc) => {
-                if (doc.data().title.includes(searchInput)) {
-                    processedSections.push({
-                        docId: doc.id,
-                        ...doc.data(),
-                    });
-                }
-            });
+            if (searchInput !== "") {
+                searchSections.forEach((doc) => {
+                    if (doc.data().title.includes(searchInput)) {
+                        processedSections.push({
+                            docId: doc.id,
+                            ...doc.data(),
+                        });
+                    }
+                });
+            }
         }
 
-        console.log(processedSections);
+        // console.log(processedSections);
         return processedSections;
     },
 });

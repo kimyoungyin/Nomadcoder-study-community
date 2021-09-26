@@ -83,7 +83,7 @@ const Section = ({
         category,
         createdAt,
         owner,
-        // comments,
+        comments,
     },
 }) => {
     const [isLiked, setIsLiked] = useState(false);
@@ -126,16 +126,16 @@ const Section = ({
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
                     <span className="section-dot">•</span>
-                    {/* <div className="section-comments">
+                    <div className="section-comments">
                         💬 <span>{comments.length}</span>
-                    </div> */}
+                    </div>
                 </div>
             </div>
-            {/* <img
-                src={owner.avatarUrl}
-                alt={owner.username}
+            <img
+                src={owner.photoURL}
+                alt={owner.displayName}
                 onClick={() => {}}
-            /> */}
+            />
         </SectionCard>
     );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Button from "../../components/UI/Button";
 import Categories from "./Categories";
-import Sections from "./Sections/Sections";
+import SectionGrid from "./Sections/SectionGrid";
 
 const HomeMainLayout = styled.main`
     padding: 0 2rem 10rem;
@@ -33,9 +33,7 @@ const HomeMain = ({ courses }) => {
     return (
         <HomeMainLayout>
             <Categories courses={courses} />
-            <React.Suspense fallback={<div>Hello</div>}>
-                <Sections />
-            </React.Suspense>
+            <SectionGrid />
             <ButtonGrid>
                 <Button shadow="md" fw={400} py={2} onClick={() => {}}>
                     {/* upload route로 이동 */}

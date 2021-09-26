@@ -46,11 +46,19 @@ const Sorter = ({ type, onTypeChange }) => {
         <StyledSorter type={sorter}>
             <div className="sorter-type">
                 <span>Sort by</span>
-                <Link to={`/${category}?sort=popular`} className="popular">
+                <Link
+                    to={`${
+                        category !== "all" ? `/${category}` : ""
+                    }?sort=popular`}
+                    className="popular"
+                >
                     <FontAwesomeIcon icon={faFire} />
                     Popular
                 </Link>
-                <Link to={`/${category}`} className="new">
+                <Link
+                    to={category !== "all" ? `/${category}` : "/"}
+                    className="new"
+                >
                     <FontAwesomeIcon icon={faBolt} />
                     New
                 </Link>

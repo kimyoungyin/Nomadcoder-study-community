@@ -4,7 +4,11 @@ import HomeMain from "./HomeMain";
 import NOMAD_COURSES from "../Courses";
 import styled from "styled-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { homeCategoryState, homeSortState } from "../../recoil/homeRecoil";
+import {
+    homeCategoryState,
+    homeSortState,
+    sectionsPageState,
+} from "../../recoil/homeRecoil";
 
 const Homelayout = styled.div`
     padding: 7rem 0 8rem;
@@ -22,17 +26,18 @@ const Homelayout = styled.div`
 const Home = ({ match, location }) => {
     const [categoryState, setCategoryState] = useRecoilState(homeCategoryState);
     const setSorter = useSetRecoilState(homeSortState);
+    const setPages = useSetRecoilState(sectionsPageState);
 
     useEffect(() => {
         const categoryParams =
             match.url === "/" ? "all" : match.params.category;
+        const locationQuery = new URLSearchParams(location.search);
 
-        const sortQuery = location.search
-            ? location.search.split("=")[1]
-            : "new";
-
-        setSorter(sortQuery);
+        const sortQuery = locationQuery.get("sort") || "new";
+        const pageQuery = locationQuery.get("page") || 1;
         setCategoryState(categoryParams);
+        setSorter(sortQuery);
+        setPages(pageQuery);
         window.scroll({ top: 0, behavior: "smooth" });
     }, [match.params.category, location.search]);
 
