@@ -26,6 +26,11 @@ export const searchInputState = atom({
     default: "",
 });
 
+export const sectionsPageState = atom({
+    key: "sectionsPage",
+    default: 1,
+});
+
 export const sectionsSelector = selector({
     key: "sections",
     get: async ({ get }) => {
@@ -38,48 +43,60 @@ export const sectionsSelector = selector({
         const notPinnedCondition = where("isPinned", "==", false);
         let categoryCondition = null;
         let sortCondition = orderBy("createdAt", "desc");
-        let q1 = null;
-        let q2 = null;
+        let pinQuery = null;
+        let notPinQuery = null;
         let processedSections = [];
 
         if (sorter === "popular") {
             sortCondition = orderBy("likesNum", "desc");
         }
 
-        if (category !== "all") {
+        if (category === "all") {
+            pinQuery = query(threadsRef, pinnedCondition, sortCondition);
+            notPinQuery = query(threadsRef, notPinnedCondition, sortCondition);
+        } else {
             categoryCondition = where("category", "==", category);
-            q1 = query(
+            pinQuery = query(
                 threadsRef,
                 categoryCondition,
                 pinnedCondition,
                 sortCondition
             );
-            q2 = query(
+            notPinQuery = query(
                 threadsRef,
                 categoryCondition,
                 notPinnedCondition,
                 sortCondition
             );
-        } else {
-            q1 = query(threadsRef, pinnedCondition, sortCondition);
-            q2 = query(threadsRef, notPinnedCondition, sortCondition);
         }
 
-        const pinnedSections = await getDocs(q1);
-        const notPinnedSections = await getDocs(q2);
-        pinnedSections.forEach((doc) =>
-            processedSections.push({
-                docId: doc.id,
-                ...doc.data(),
-            })
-        );
-        console.log(processedSections);
-        notPinnedSections.forEach((doc) =>
-            processedSections.push({
-                docId: doc.id,
-                ...doc.data(),
-            })
-        );
+        if (category !== "search") {
+            const pinnedSections = await getDocs(pinQuery);
+            const notPinnedSections = await getDocs(notPinQuery);
+            pinnedSections.forEach((doc) =>
+                processedSections.push({
+                    docId: doc.id,
+                    ...doc.data(),
+                })
+            );
+            notPinnedSections.forEach((doc) =>
+                processedSections.push({
+                    docId: doc.id,
+                    ...doc.data(),
+                })
+            );
+        } else if (category === "search" && searchInput !== "") {
+            const searchSections = await getDocs(threadsRef, sortCondition);
+            searchSections.forEach((doc) => {
+                if (doc.data().title.includes(searchInput)) {
+                    processedSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    });
+                }
+            });
+        }
+
         console.log(processedSections);
         return processedSections;
     },
