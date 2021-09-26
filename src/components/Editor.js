@@ -28,6 +28,30 @@ const FormWrapper = styled.div`
   border-bottom-left-radius: 0.375rem;
   border-bottom-right-radius: 0.375rem;
   }
+
+  * {
+    color: black;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.17rem;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  i {
+    font-style: italic;
+  }
 `
 
 function Editor({onChange}) {
