@@ -21,7 +21,7 @@ const Sections = () => {
     const pagedSections = useRecoilValue(sectionsSelector) || [];
     const currentPage = useRecoilValue(currentPageState);
 
-    const checkdeSectionsPage = pagedSections[currentPage - 1] || [];
+    const checkedSectionsPage = pagedSections[currentPage - 1] || [];
     const isNextPage = pagedSections[currentPage] !== undefined;
     const linkUrl = (location, currentPage, isNext) => {
         let toThisPage = isNext
@@ -42,7 +42,7 @@ const Sections = () => {
 
     return (
         <StyledSections>
-            {checkdeSectionsPage.map((section, index) => (
+            {checkedSectionsPage.map((section, index) => (
                 <Section key={index} section={section} />
             ))}
             <div className="page-controller">
