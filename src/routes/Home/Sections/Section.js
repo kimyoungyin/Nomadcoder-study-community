@@ -2,8 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Card from "../../../components/UI/Card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { doc, updateDoc } from "@firebase/firestore";
+import { db } from "../../../fb";
 
 const SectionCard = styled(Card)`
     display: flex;
@@ -90,14 +92,48 @@ const Section = ({
         docId,
         isPinned,
         likesNum,
+        likes,
         title,
         category,
         createdAt,
         owner,
         comments,
     },
+    displayName,
 }) => {
     const [isLiked, setIsLiked] = useState(false);
+    const [likedNumber, setLikedNumber] = useState(likesNum);
+    const docRef = doc(db, "threads", docId);
+    useEffect(() => {
+        const getArray = [...likes];
+        const check = getArray.includes(displayName);
+        setIsLiked(check);
+    }, []);
+
+    const handleLikeData = async () => {
+        if (isLiked) {
+            const likesIndex = likes.findIndex((user) => user === displayName);
+            if (likesIndex <= -1) return;
+            setIsLiked(false);
+            setLikedNumber((likedNumber) => likedNumber - 1);
+            let updatedLikes = [...likes];
+            updatedLikes.splice(likesIndex, 1);
+            await updateDoc(docRef, {
+                likesNum: likedNumber - 1,
+                likes: updatedLikes,
+            });
+        } else {
+            setIsLiked(true);
+            setLikedNumber((likedNumber) => likedNumber + 1);
+            let updatedLikes = [...likes];
+            updatedLikes.push(displayName);
+            await updateDoc(docRef, {
+                likesNum: likedNumber + 1,
+                likes: updatedLikes,
+            });
+        }
+    };
+
     const calculateTerm = (createdAt) => {
         const gap = Date.now() - createdAt;
         if (gap >= 604800000) {
@@ -112,12 +148,9 @@ const Section = ({
     };
     return (
         <SectionCard as="section" isMain={isPinned} isLiked={isLiked}>
-            <div
-                className="section-likeBox"
-                onClick={() => setIsLiked((isLiked) => !isLiked)}
-            >
+            <div className="section-likeBox" onClick={handleLikeData}>
                 <FontAwesomeIcon icon={faAngleUp} />
-                <div>{likesNum}</div>
+                <div>{likedNumber}</div>
             </div>
             <div className="section-data">
                 <Link to={`/thread/${docId}`} className="section-title">

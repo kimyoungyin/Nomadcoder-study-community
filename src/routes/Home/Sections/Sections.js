@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { authState } from "../../../recoil/authRecoil";
 import { currentPageState, sectionsSelector } from "../../../recoil/homeRecoil";
 import Section from "./Section";
 
@@ -20,6 +21,7 @@ const StyledSections = styled.div`
 const Sections = () => {
     const pagedSections = useRecoilValue(sectionsSelector) || [];
     const currentPage = useRecoilValue(currentPageState);
+    const user = useRecoilValue(authState);
 
     const checkedSectionsPage = pagedSections[currentPage - 1] || [];
     const isNextPage = pagedSections[currentPage] !== undefined;
@@ -42,8 +44,12 @@ const Sections = () => {
 
     return (
         <StyledSections>
-            {checkedSectionsPage.map((section, index) => (
-                <Section key={index} section={section} />
+            {checkedSectionsPage.map((section) => (
+                <Section
+                    key={section.docId}
+                    section={section}
+                    displayName={user.displayName}
+                />
             ))}
             <div className="page-controller">
                 {currentPage > 1 && (

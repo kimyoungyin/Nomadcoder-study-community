@@ -27,7 +27,6 @@ const Home = ({ match, location }) => {
     const [category, setCategory] = useRecoilState(homeCategoryState);
     const setSorter = useSetRecoilState(homeSortState);
     const setPage = useSetRecoilState(currentPageState);
-    console.log(location.search);
     useEffect(() => {
         const categoryParams =
             match.url === "/" ? "all" : match.params.category;
