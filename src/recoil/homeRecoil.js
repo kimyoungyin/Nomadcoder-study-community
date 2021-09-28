@@ -42,7 +42,8 @@ export const sectionsQuerySelector = selector({
         } else if (category !== "all") {
             categoryQuery = where("category", "==", category);
         }
-        if (sorter !== "popluar") {
+
+        if (sorter !== "popular") {
             isPinnedRequired = true;
         } else {
             sortQuery = orderBy("likesNum", "desc");
@@ -62,13 +63,63 @@ export const sectionsSelector = selector({
 
         const { categoryQuery, isSearch, sortQuery, isPinnedRequired } =
             sectionsQueryObj;
+
         const threadsRef = collection(db, "threads");
         const pinnedQuery = where("isPinned", "==", true);
         const notPinnedQuery = where("isPinned", "==", false);
 
         let rawSections = [];
+
+        const processPinnedOrNot = async () => {
+            if (isPinnedRequired) {
+                const q1 =
+                    categoryQuery !== null
+                        ? query(
+                              threadsRef,
+                              categoryQuery,
+                              pinnedQuery,
+                              sortQuery
+                          )
+                        : query(threadsRef, pinnedQuery, sortQuery);
+                const q2 =
+                    categoryQuery !== null
+                        ? query(
+                              threadsRef,
+                              categoryQuery,
+                              notPinnedQuery,
+                              sortQuery
+                          )
+                        : query(threadsRef, notPinnedQuery, sortQuery);
+                const pinnedSections = await getDocs(q1);
+                const notPinnedSections = await getDocs(q2);
+                pinnedSections.forEach((doc) =>
+                    rawSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    })
+                );
+                notPinnedSections.forEach((doc) =>
+                    rawSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    })
+                );
+            } else {
+                const q =
+                    categoryQuery !== null
+                        ? query(threadsRef, categoryQuery, sortQuery)
+                        : query(threadsRef, sortQuery);
+                const categorySections = await getDocs(q);
+                categorySections.forEach((doc) =>
+                    rawSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    })
+                );
+            }
+        };
+
         if (isSearch) {
-            console.log("search 자리");
             const searchedSections = await getDocs(
                 query(threadsRef, sortQuery)
             );
@@ -82,48 +133,8 @@ export const sectionsSelector = selector({
                     }
                 });
             }
-        } else if (categoryQuery) {
-            console.log("category 자리");
-            if (isPinnedRequired) {
-                const pinnedSections = await getDocs(
-                    query(threadsRef, categoryQuery, pinnedQuery, sortQuery)
-                );
-                const notPinnedSections = await getDocs(
-                    query(threadsRef, categoryQuery, notPinnedQuery, sortQuery)
-                );
-                pinnedSections.forEach((doc) =>
-                    rawSections.push({
-                        docId: doc.id,
-                        ...doc.data(),
-                    })
-                );
-                notPinnedSections.forEach((doc) =>
-                    rawSections.push({
-                        docId: doc.id,
-                        ...doc.data(),
-                    })
-                );
-            }
         } else {
-            console.log("all 자리!");
-            const pinnedSections = await getDocs(
-                query(threadsRef, pinnedQuery, sortQuery)
-            );
-            const notPinnedSections = await getDocs(
-                query(threadsRef, notPinnedQuery, sortQuery)
-            );
-            pinnedSections.forEach((doc) =>
-                rawSections.push({
-                    docId: doc.id,
-                    ...doc.data(),
-                })
-            );
-            notPinnedSections.forEach((doc) =>
-                rawSections.push({
-                    docId: doc.id,
-                    ...doc.data(),
-                })
-            );
+            await processPinnedOrNot();
         }
 
         let pagedSections = [];
