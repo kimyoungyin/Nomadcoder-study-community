@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { faAngleUp, faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Card from "../../../components/UI/Card";
 import { useState } from "react";
@@ -32,6 +32,17 @@ const SectionCard = styled(Card)`
             font-weight: 600;
             color: ${(props) => props.theme.grey_910};
             word-break: break-all;
+            span,
+            path {
+                color: #34d399;
+            }
+            span {
+                font-size: 0.875rem;
+                margin-left: 0.5rem;
+            }
+            path {
+                font-size: 0.75rem;
+            }
         }
         .section-descriptions {
             * {
@@ -110,8 +121,12 @@ const Section = ({
             </div>
             <div className="section-data">
                 <Link to={`/thread/${docId}`} className="section-title">
-                    {/* url 아이디는 이후 firebase id를 부여받으면 치환 예정 */}
-                    {title}
+                    {title}{" "}
+                    {isPinned && (
+                        <span>
+                            <FontAwesomeIcon icon={faThumbtack} /> Pinned
+                        </span>
+                    )}
                 </Link>
                 <div className="section-descriptions">
                     <div className="section-category">

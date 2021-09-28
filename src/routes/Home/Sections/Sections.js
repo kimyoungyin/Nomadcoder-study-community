@@ -1,16 +1,67 @@
+import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { sectionsSelector } from "../../../recoil/homeRecoil";
+import styled from "styled-components";
+import { currentPageState, sectionsSelector } from "../../../recoil/homeRecoil";
 import Section from "./Section";
 
+const StyledSections = styled.div`
+    .page-controller {
+        display: flex;
+        gap: 5rem;
+        justify-content: center;
+        margin-top: 2.5rem;
+        a {
+            color: ${(props) => props.theme.blue_light};
+            font-weight: 500;
+        }
+    }
+`;
+
 const Sections = () => {
-    const processedSections = useRecoilValue(sectionsSelector);
+    const pagedSections = useRecoilValue(sectionsSelector) || [];
+    const currentPage = useRecoilValue(currentPageState);
+
+    const checkdeSectionsPage = pagedSections[currentPage - 1] || [];
+    const isNextPage = pagedSections[currentPage] !== undefined;
+    const linkUrl = (location, currentPage, isNext) => {
+        let toThisPage = isNext
+            ? Number(currentPage) + 1
+            : Number(currentPage) - 1;
+
+        if (!location.search) {
+            return `?page=${toThisPage}`;
+        } else if (location.search.includes(`page=${currentPage}`)) {
+            return location.search.replace(
+                `page=${currentPage}`,
+                `page=${toThisPage}`
+            );
+        } else {
+            return `${location.search}&page=${toThisPage}`;
+        }
+    };
 
     return (
-        <>
-            {processedSections.map((section, index) => (
+        <StyledSections>
+            {checkdeSectionsPage.map((section, index) => (
                 <Section key={index} section={section} />
             ))}
-        </>
+            <div className="page-controller">
+                {currentPage > 1 && (
+                    <Link
+                        to={(location) => linkUrl(location, currentPage, false)}
+                    >
+                        ← Previous page
+                    </Link>
+                )}
+                {isNextPage && (
+                    <Link
+                        to={(location) => linkUrl(location, currentPage, true)}
+                    >
+                        Next page →
+                    </Link>
+                )}
+            </div>
+        </StyledSections>
     );
 };
 

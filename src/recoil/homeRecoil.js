@@ -1,9 +1,6 @@
 import {
     collection,
-    doc,
-    getDoc,
     getDocs,
-    limit,
     orderBy,
     query,
     where,
@@ -26,79 +23,133 @@ export const searchInputState = atom({
     default: "",
 });
 
-export const sectionsPageState = atom({
+export const currentPageState = atom({
     key: "sectionsPage",
     default: 1,
 });
 
+export const sectionsQuerySelector = selector({
+    key: "sectionsQuery",
+    get: ({ get }) => {
+        const category = get(homeCategoryState);
+        const sorter = get(homeSortState);
+        let categoryQuery = null;
+        let isSearch = false;
+        let sortQuery = orderBy("createdAt", "desc");
+        let isPinnedRequired = false;
+        if (category === "search") {
+            isSearch = true;
+        } else if (category !== "all") {
+            categoryQuery = where("category", "==", category);
+        }
+        if (sorter !== "popluar") {
+            isPinnedRequired = true;
+        } else {
+            sortQuery = orderBy("likesNum", "desc");
+        }
+
+        return { categoryQuery, isSearch, sortQuery, isPinnedRequired };
+    },
+});
+
+const SECTIONS_NUMBER_IN_PAGE = 10;
+
 export const sectionsSelector = selector({
     key: "sections",
     get: async ({ get }) => {
-        const category = get(homeCategoryState);
-        const sorter = get(homeSortState);
+        const sectionsQueryObj = get(sectionsQuerySelector);
         const searchInput = get(searchInputState);
+
+        const { categoryQuery, isSearch, sortQuery, isPinnedRequired } =
+            sectionsQueryObj;
         const threadsRef = collection(db, "threads");
-        const pinnedCondition = where("isPinned", "==", true);
-        const notPinnedCondition = where("isPinned", "==", false);
-        let categoryCondition = null;
-        let sortCondition = orderBy("createdAt", "desc");
-        let pinQuery = null;
-        let notPinQuery = null;
-        let processedSections = [];
+        const pinnedQuery = where("isPinned", "==", true);
+        const notPinnedQuery = where("isPinned", "==", false);
 
-        if (sorter === "popular") {
-            sortCondition = orderBy("likesNum", "desc");
-        }
-
-        if (category === "all") {
-            pinQuery = query(threadsRef, pinnedCondition, sortCondition);
-            notPinQuery = query(threadsRef, notPinnedCondition, sortCondition);
-        } else {
-            categoryCondition = where("category", "==", category);
-            pinQuery = query(
-                threadsRef,
-                categoryCondition,
-                pinnedCondition,
-                sortCondition
+        let rawSections = [];
+        if (isSearch) {
+            console.log("search 자리");
+            const searchedSections = await getDocs(
+                query(threadsRef, sortQuery)
             );
-            notPinQuery = query(
-                threadsRef,
-                categoryCondition,
-                notPinnedCondition,
-                sortCondition
-            );
-        }
-
-        if (category !== "search") {
-            const pinnedSections = await getDocs(pinQuery);
-            const notPinnedSections = await getDocs(notPinQuery);
-            pinnedSections.forEach((doc) =>
-                processedSections.push({
-                    docId: doc.id,
-                    ...doc.data(),
-                })
-            );
-            notPinnedSections.forEach((doc) =>
-                processedSections.push({
-                    docId: doc.id,
-                    ...doc.data(),
-                })
-            );
-        } else if (category === "search") {
-            const searchSections = await getDocs(threadsRef, sortCondition);
             if (searchInput !== "") {
-                searchSections.forEach((doc) => {
+                searchedSections.forEach((doc) => {
                     if (doc.data().title.includes(searchInput)) {
-                        processedSections.push({
+                        rawSections.push({
                             docId: doc.id,
                             ...doc.data(),
                         });
                     }
                 });
             }
+        } else if (categoryQuery) {
+            console.log("category 자리");
+            if (isPinnedRequired) {
+                const pinnedSections = await getDocs(
+                    query(threadsRef, categoryQuery, pinnedQuery, sortQuery)
+                );
+                const notPinnedSections = await getDocs(
+                    query(threadsRef, categoryQuery, notPinnedQuery, sortQuery)
+                );
+                pinnedSections.forEach((doc) =>
+                    rawSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    })
+                );
+                notPinnedSections.forEach((doc) =>
+                    rawSections.push({
+                        docId: doc.id,
+                        ...doc.data(),
+                    })
+                );
+            }
+        } else {
+            console.log("all 자리!");
+            const pinnedSections = await getDocs(
+                query(threadsRef, pinnedQuery, sortQuery)
+            );
+            const notPinnedSections = await getDocs(
+                query(threadsRef, notPinnedQuery, sortQuery)
+            );
+            pinnedSections.forEach((doc) =>
+                rawSections.push({
+                    docId: doc.id,
+                    ...doc.data(),
+                })
+            );
+            notPinnedSections.forEach((doc) =>
+                rawSections.push({
+                    docId: doc.id,
+                    ...doc.data(),
+                })
+            );
         }
 
-        // console.log(processedSections);
-        return processedSections;
+        let pagedSections = [];
+        const totalPages = Math.ceil(
+            rawSections.length / SECTIONS_NUMBER_IN_PAGE
+        );
+
+        const divideSections = (totalSections, unitNum, totalPages) => {
+            let divided = [];
+            let start = 0;
+            let end = unitNum;
+            for (let i = 0; i < totalPages; i++) {
+                divided.push(totalSections.slice(start, end));
+                start += unitNum;
+                end += unitNum;
+            }
+            return divided;
+        };
+
+        if (!isSearch || searchInput !== "") {
+            pagedSections = divideSections(
+                rawSections,
+                SECTIONS_NUMBER_IN_PAGE,
+                totalPages
+            );
+        }
+        return pagedSections;
     },
 });
