@@ -48,7 +48,7 @@ const Sections = () => {
                 <Section
                     key={section.docId}
                     section={section}
-                    displayName={user.displayName}
+                    displayName={user ? user.displayName : null}
                 />
             ))}
             <div className="page-controller">

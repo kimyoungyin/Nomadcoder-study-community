@@ -3,7 +3,7 @@ import { faAngleUp, faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Card from "../../../components/UI/Card";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../../../fb";
 
@@ -103,6 +103,7 @@ const Section = ({
 }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likedNumber, setLikedNumber] = useState(likesNum);
+    const history = useHistory();
     const docRef = doc(db, "threads", docId);
     useEffect(() => {
         const getArray = [...likes];
@@ -111,6 +112,10 @@ const Section = ({
     }, []);
 
     const handleLikeData = async () => {
+        if (!displayName) {
+            alert("로그인 하시면 추천할 수 있어요!");
+            return history.push("/join");
+        }
         if (isLiked) {
             const likesIndex = likes.findIndex((user) => user === displayName);
             if (likesIndex <= -1) return;
