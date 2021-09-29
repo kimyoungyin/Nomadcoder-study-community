@@ -4,7 +4,12 @@ import styled from "styled-components";
 import Card from "../../../components/UI/Card";
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { doc, updateDoc } from "@firebase/firestore";
+import {
+    arrayRemove,
+    arrayUnion,
+    doc,
+    runTransaction,
+} from "@firebase/firestore";
 import { db } from "../../../fb";
 
 const SectionCard = styled(Card)`
@@ -105,6 +110,7 @@ const Section = ({
     const [likedNumber, setLikedNumber] = useState(likesNum);
     const history = useHistory();
     const docRef = doc(db, "threads", docId);
+
     useEffect(() => {
         const getArray = [...likes];
         const check = getArray.includes(displayName);
@@ -116,26 +122,32 @@ const Section = ({
             alert("로그인 하시면 추천할 수 있어요!");
             return history.push("/join");
         }
-        if (isLiked) {
-            const likesIndex = likes.findIndex((user) => user === displayName);
-            if (likesIndex <= -1) return;
-            setIsLiked(false);
-            setLikedNumber((likedNumber) => likedNumber - 1);
-            let updatedLikes = [...likes];
-            updatedLikes.splice(likesIndex, 1);
-            await updateDoc(docRef, {
-                likesNum: likedNumber - 1,
-                likes: updatedLikes,
+        try {
+            await runTransaction(db, async (transaction) => {
+                const sectionDoc = await transaction.get(docRef);
+                if (!sectionDoc.exists()) {
+                    throw "해당 글이 존재하지 않습니다";
+                }
+                if (!isLiked) {
+                    setIsLiked(true);
+                    setLikedNumber((prev) => prev + 1);
+                    const newLikesNum = sectionDoc.data().likesNum + 1;
+                    transaction.update(docRef, {
+                        likesNum: newLikesNum,
+                        likes: arrayUnion(displayName),
+                    });
+                } else if (isLiked) {
+                    setIsLiked(false);
+                    setLikedNumber((prev) => prev - 1);
+                    const newLikesNum = sectionDoc.data().likesNum - 1;
+                    transaction.update(docRef, {
+                        likesNum: newLikesNum,
+                        likes: arrayRemove(displayName),
+                    });
+                }
             });
-        } else {
-            setIsLiked(true);
-            setLikedNumber((likedNumber) => likedNumber + 1);
-            let updatedLikes = [...likes];
-            updatedLikes.push(displayName);
-            await updateDoc(docRef, {
-                likesNum: likedNumber + 1,
-                likes: updatedLikes,
-            });
+        } catch (error) {
+            console.error(error);
         }
     };
 
