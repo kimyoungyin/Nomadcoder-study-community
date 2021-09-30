@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { authState } from "../../../recoil/authRecoil";
 import { currentPageState, sectionsSelector } from "../../../recoil/homeRecoil";
+import EmptySection from "./EmptySection";
 import Section from "./Section";
 
 const StyledSections = styled.div`
@@ -22,9 +23,9 @@ const Sections = () => {
     const pagedSections = useRecoilValue(sectionsSelector) || [];
     const currentPage = useRecoilValue(currentPageState);
     const user = useRecoilValue(authState);
-
-    const checkedSectionsPage = pagedSections[currentPage - 1] || [];
+    const checkedSectionsPage = pagedSections[currentPage - 1];
     const isNextPage = pagedSections[currentPage] !== undefined;
+
     const linkUrl = (location, currentPage, isNext) => {
         let toThisPage = isNext
             ? Number(currentPage) + 1
@@ -44,15 +45,19 @@ const Sections = () => {
 
     return (
         <StyledSections>
-            {checkedSectionsPage.map((section) => (
-                <Section
-                    key={section.docId}
-                    section={section}
-                    displayName={user ? user.displayName : null}
-                />
-            ))}
+            {checkedSectionsPage ? (
+                checkedSectionsPage.map((section) => (
+                    <Section
+                        key={section.docId}
+                        section={section}
+                        displayName={user ? user.displayName : null}
+                    />
+                ))
+            ) : (
+                <EmptySection />
+            )}
             <div className="page-controller">
-                {currentPage > 1 && (
+                {currentPage > 1 && checkedSectionsPage && (
                     <Link
                         to={(location) => linkUrl(location, currentPage, false)}
                     >
