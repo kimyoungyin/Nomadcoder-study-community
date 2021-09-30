@@ -38,8 +38,16 @@ const ThreadCard = styled(Card)`
     .thread-content {
         margin-top: 1.25rem;
         margin-left: 4rem;
-        p > * {
+        * {
+            color: black;
+        }
+        & > * {
             padding: 0.75rem 0;
+        }
+        ul,
+        ol {
+            list-style: inside;
+            padding-left: 1rem;
         }
         img {
             max-width: 100%;
