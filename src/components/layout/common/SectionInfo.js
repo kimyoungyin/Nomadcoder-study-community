@@ -11,6 +11,7 @@ import {
 import { db } from "../../../fb";
 import styled from "styled-components";
 import LikeButton from "./LikeButton";
+import useTerm from "../../../Hooks/useTerm";
 
 const SectionInfoLayout = styled.div`
     display: flex;
@@ -79,6 +80,7 @@ const SectionInfo = ({ section, displayName }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likedNumber, setLikedNumber] = useState(section.likesNum);
     const history = useHistory();
+    const term = useTerm(section.createdAt);
     const docRef = doc(db, "threads", section.docId);
 
     useEffect(() => {
@@ -121,23 +123,6 @@ const SectionInfo = ({ section, displayName }) => {
         }
     };
 
-    const calculateTerm = (createdAt) => {
-        const gap = Date.now() - createdAt;
-        const MILLISECOND_PER_MINUTE = 60000;
-        const MILLISECOND_PER_HOUR = MILLISECOND_PER_MINUTE * 60;
-        const MILLISECOND_PER_DAY = MILLISECOND_PER_HOUR * 24;
-        const MILLISECOND_PER_WEEK = MILLISECOND_PER_DAY * 7;
-
-        if (gap >= MILLISECOND_PER_WEEK) {
-            return `${Math.floor(gap / MILLISECOND_PER_WEEK)} weeks ago`;
-        } else if (gap >= MILLISECOND_PER_DAY) {
-            return `${Math.floor(gap / MILLISECOND_PER_DAY)} days ago`;
-        } else if (gap >= MILLISECOND_PER_HOUR) {
-            return `${Math.floor(gap / MILLISECOND_PER_HOUR)} hours ago`;
-        } else {
-            return `${Math.floor(gap / MILLISECOND_PER_MINUTE)} minutes ago`;
-        }
-    };
     return (
         <SectionInfoLayout>
             <LikeButton
@@ -168,7 +153,7 @@ const SectionInfo = ({ section, displayName }) => {
                         </Link>
                     </div>
                     <span className="section-dot">•</span>
-                    <div>{calculateTerm(section.createdAt)}</div>
+                    <div>{term}</div>
                     <span className="section-dot">•</span>
                     {/* subcollection 참조 만들 예정 */}
                     {/* <div className="section-comments">
