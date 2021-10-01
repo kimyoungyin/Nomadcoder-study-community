@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp, faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -10,27 +10,12 @@ import {
 } from "@firebase/firestore";
 import { db } from "../../../fb";
 import styled from "styled-components";
+import LikeButton from "./LikeButton";
 
 const SectionInfoLayout = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .section-likeBox {
-        background-color: white;
-        border: 2px solid ${(props) => (props.isLiked ? "#10b981" : "#d1d5db")};
-        * {
-            color: ${(props) =>
-                props.isLiked ? "#10b981" : props.theme.grey_900};
-        }
-        border-radius: 0.375rem;
-        margin-right: 1.25rem;
-        padding: 0 0.75rem;
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
     .section-data {
         width: 100%;
         .section-title {
@@ -83,7 +68,6 @@ const SectionInfoLayout = styled.div`
         width: 3.5rem;
         border-radius: 50%;
     }
-    .section-likeBox,
     .section-title,
     a,
     img {
@@ -155,11 +139,12 @@ const SectionInfo = ({ section, displayName }) => {
         }
     };
     return (
-        <SectionInfoLayout isLiked={isLiked}>
-            <div className="section-likeBox" onClick={handleLikeData}>
-                <FontAwesomeIcon icon={faAngleUp} />
-                <div>{likedNumber}</div>
-            </div>
+        <SectionInfoLayout>
+            <LikeButton
+                onChangeLikeData={handleLikeData}
+                likedNumber={likedNumber}
+                isLiked={isLiked}
+            />
             <div className="section-data">
                 <Link to={`/thread/${section.docId}`} className="section-title">
                     {section.title}{" "}
@@ -185,9 +170,10 @@ const SectionInfo = ({ section, displayName }) => {
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(section.createdAt)}</div>
                     <span className="section-dot">•</span>
-                    <div className="section-comments">
+                    {/* subcollection 참조 만들 예정 */}
+                    {/* <div className="section-comments">
                         💬 <span>{section.comments.length}</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <img
