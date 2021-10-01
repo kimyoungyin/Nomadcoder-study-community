@@ -17,6 +17,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 7rem;
+  padding: 0 1rem;
 `;
 
 const Title = styled.h2`
@@ -98,8 +99,14 @@ function Post() {
     if (title.value.length < 10) {
       alert('제목은 10글자 이상 작성해주세요.');
       return;
-    } else if (category === '') {
+    } else if (category === 'placeholder') {
       alert('카테고리를 선택해주세요.');
+      return;
+    } else if (category.length === 0) {
+      alert('카테고리를 선택해주세요.');
+      return;
+    } else if (threadContent.length === 0) {
+      alert('글을 작성해주세요.');
       return;
     }
 
