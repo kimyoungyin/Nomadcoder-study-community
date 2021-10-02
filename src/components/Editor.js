@@ -43,7 +43,7 @@ const FormWrapper = styled.div`
   }
 
   h3 {
-    font-size: 1.17rem;
+    font-size: 1.25rem;
   }
 
   strong {
