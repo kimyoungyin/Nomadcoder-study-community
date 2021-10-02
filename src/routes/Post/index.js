@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Editor from '../../components/Editor';
 import Input from '../../components/UI/Input';
@@ -60,8 +60,7 @@ const TitleNotice = styled.p`
 `;
 
 const CategorySelect = styled.select`
-  margin-top: 1.25rem;
-  margin-bottom: 0;
+  margin: 1.25rem 0;
   appearance: none;
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
@@ -81,12 +80,51 @@ const PostButton = styled(Button)`
   margin-top: 2rem;
 `;
 
+const IsPinnedBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  input[id='isPinned'] {
+    display: none;
+  }
+
+  input[id='isPinned'] + label {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 1px solid ${(props) => props.theme.grey_500};
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  input[id='isPinned']:checked + label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div {
+      display: block;
+      width: 0.9rem;
+      height: 0.9rem;
+      background-color: ${(props) => props.theme.blue_light};
+      border-radius: 3px;
+    }
+  }
+`;
+
 function Post() {
   const user = useRecoilValue(authState);
   const title = useInput('', (title) => title.length <= 80);
   const [category, setCategory] = useState('');
   const [threadContent, setThreadContent] = useState('');
+  const [isPinned, setIsPinned] = useState(false);
   const history = useHistory();
+
+  useEffect(() => {
+    if (user.displayName === 'kimyoungin' || user.displayName === 'Jiho Shin') setIsPinned(true);
+  }, []);
+
   const categoryChangeHandler = (e) => {
     setCategory(e.target.value);
   };
@@ -117,7 +155,7 @@ function Post() {
           photoURL: user.photoURL,
         },
         category: category,
-        isPinned: false,
+        isPinned,
         likes: [],
         likesNum: 0,
         comments: [],
@@ -150,7 +188,15 @@ function Post() {
               );
             })}
           </CategorySelect>
-
+          {isPinned && (
+            <IsPinnedBox>
+              <input type="checkbox" id="isPinned" />
+              <label for="isPinned">
+                <div></div>
+              </label>
+              <span>핀 고정시키기</span>
+            </IsPinnedBox>
+          )}
           <Editor onChange={contentChangeHandler} />
           <PostButton py={2} background={theme.blue_light}>
             <span>등록</span>
