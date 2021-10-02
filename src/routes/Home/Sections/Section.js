@@ -197,9 +197,9 @@ const Section = ({
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
                     <span className="section-dot">•</span>
-                    <div className="section-comments">
+                    {/* <div className="section-comments">
                         💬 <span>{comments.length}</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <img
