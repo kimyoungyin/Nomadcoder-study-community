@@ -6,6 +6,7 @@ import { authService } from '../../../../fb';
 import useInput from '../../../../Hooks/useInput';
 import { authState } from '../../../../recoil/authRecoil';
 import Button from '../../../UI/Button';
+import Input from '../../../UI/Input';
 
 const Form = styled.form`
   display: flex;
@@ -19,12 +20,6 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
-const Input = styled.input`
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid rgba(209, 213, 219);
-  margin-bottom: 1.5rem;
-`;
 
 function AuthForm({ authType }) {
   const setAuth = useSetRecoilState(authState);

@@ -5,6 +5,7 @@ import { isLoggedInState } from './recoil/authRecoil';
 import Home from './routes/Home';
 import Join from './routes/Join';
 import Login from './routes/Login';
+import Post from './routes/Post';
 
 const Router = () => {
   const isLoggedIn = useRecoilValue(isLoggedInState);
@@ -18,7 +19,9 @@ const Router = () => {
           {isLoggedIn ? <Redirect to="/" /> : <Join />}
         </Route>
         <Route path="/login">{isLoggedIn ? <Redirect to="/" /> : <Login />}</Route>
-
+        <Route path="/post">
+          {isLoggedIn ? <Post /> : <Login />}
+        </Route>
         <Route path="/:category" component={Home} />
         {/* <Route path="/search" component={Home} />
                 <Route path="/users/:id" component={Home} /> */}
