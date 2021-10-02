@@ -22,8 +22,8 @@ const PaddingWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: 80rem;
-  padding: 0 .5rem;
-  @media ${(props) => props.theme.tablet} {
+  padding: 0 1.5rem;
+  @media (min-width: 1024px) {
     padding: 0 2rem;
   }
 `;
@@ -100,7 +100,9 @@ function Header() {
     <Container>
       <PaddingWrapper>
         <LogoWrapper>
+          <Link to="/">
           <Logo src={logo} alt="" />
+          </Link>
         </LogoWrapper>
         <ButtonWrapper>
           {!isLoggedIn ? (
@@ -117,6 +119,7 @@ function Header() {
           ) : (
             <Avatar onClick={toggleModalHandler}>
               {user && <img src={user.photoURL} alt="avatar"/>}
+
               {showModal && (
                 <AvatarModal>
                 <AvatarModalBlock href="#">Edit Profile</AvatarModalBlock>
@@ -125,7 +128,6 @@ function Header() {
               )}
             </Avatar>
           )}
-          {/* 추후 유저 프로필 DB 생성 시 img 동적으로 수정 */}
         </ButtonWrapper>
       </PaddingWrapper>
     </Container>
