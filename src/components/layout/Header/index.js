@@ -96,7 +96,6 @@ function Header() {
       console.log(error)
     }
   }
-
   return (
     <Container>
       <PaddingWrapper>
@@ -119,7 +118,7 @@ function Header() {
             </>
           ) : (
             <Avatar onClick={toggleModalHandler}>
-              <img src={user.photoURL} alt="test-avatar" />
+              {user && <img src={user.photoURL} alt="avatar"/>}
               {showModal && (
                 <AvatarModal>
                 <AvatarModalBlock href="#">Edit Profile</AvatarModalBlock>
