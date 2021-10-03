@@ -21,7 +21,7 @@ const Router = () => {
         </Route>
         <Route path="/login">{isLoggedIn ? <Redirect to="/" /> : <Login />}</Route>
         <Route path="/post">{isLoggedIn ? <Post /> : <Login />}</Route>
-        <Route path="/profile">{isLoggedIn ? <Redirect to="/" /> : <Profile />}</Route>
+        <Route path="/profile">{isLoggedIn ? <Profile /> : <Login />}</Route>
         <Route path="/:category" component={Home} />
         {/* <Route path="/search" component={Home} />
                 <Route path="/users/:id" component={Home} /> */}
