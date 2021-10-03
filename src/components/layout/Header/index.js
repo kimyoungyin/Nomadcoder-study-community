@@ -119,7 +119,6 @@ function Header() {
           ) : (
             <Avatar onClick={toggleModalHandler}>
               {user && <img src={user.photoURL} alt="avatar"/>}
-
               {showModal && (
                 <AvatarModal>
                 <AvatarModalBlock href="#">Edit Profile</AvatarModalBlock>

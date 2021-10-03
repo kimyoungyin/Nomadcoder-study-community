@@ -21,7 +21,7 @@ import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import styled from 'styled-components';
 
 const FormWrapper = styled.div`
-  margin-top: 3rem;
+  margin-top: 1rem;
 
   .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
     min-height: 200px;
