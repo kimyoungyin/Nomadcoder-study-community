@@ -63,7 +63,7 @@ const AvatarModal = styled.div`
   border-radius: 0.375rem;
 `
 
-const AvatarModalBlock = styled.a`
+const AvatarModalBlock = styled(Link)`
   display: block;
   width: 100%;
   padding: .5rem 1rem;
@@ -121,8 +121,8 @@ function Header() {
               {user && <img src={user.photoURL} alt="avatar"/>}
               {showModal && (
                 <AvatarModal>
-                <AvatarModalBlock href="#">Edit Profile</AvatarModalBlock>
-                <AvatarModalBlock href="#" onClick={LogoutHandler}>Logout</AvatarModalBlock>
+                <AvatarModalBlock to="/profile">Edit Profile</AvatarModalBlock>
+                <AvatarModalBlock to="/" onClick={LogoutHandler}>Logout</AvatarModalBlock>
               </AvatarModal>
               )}
             </Avatar>
