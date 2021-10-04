@@ -65,40 +65,18 @@ export const sectionsSelector = selector({
             sectionsQueryObj;
 
         const threadsRef = collection(db, "threads");
-        const pinnedQuery = where("isPinned", "==", true);
-        const notPinnedQuery = where("isPinned", "==", false);
+        const pinQuery = orderBy("isPinned", "desc");
 
         let rawSections = [];
 
         const processPinnedOrNot = async () => {
             if (isPinnedRequired) {
-                const q1 =
+                const q =
                     categoryQuery !== null
-                        ? query(
-                              threadsRef,
-                              categoryQuery,
-                              pinnedQuery,
-                              sortQuery
-                          )
-                        : query(threadsRef, pinnedQuery, sortQuery);
-                const q2 =
-                    categoryQuery !== null
-                        ? query(
-                              threadsRef,
-                              categoryQuery,
-                              notPinnedQuery,
-                              sortQuery
-                          )
-                        : query(threadsRef, notPinnedQuery, sortQuery);
-                const pinnedSections = await getDocs(q1);
-                const notPinnedSections = await getDocs(q2);
-                pinnedSections.forEach((doc) =>
-                    rawSections.push({
-                        docId: doc.id,
-                        ...doc.data(),
-                    })
-                );
-                notPinnedSections.forEach((doc) =>
+                        ? query(threadsRef, categoryQuery, pinQuery, sortQuery)
+                        : query(threadsRef, pinQuery, sortQuery);
+                const sections = await getDocs(q);
+                sections.forEach((doc) =>
                     rawSections.push({
                         docId: doc.id,
                         ...doc.data(),
