@@ -1,8 +1,8 @@
 import firebase from "firebase/compat/app";
-import { getFirestore } from "firebase/firestore";
-// import { addDoc, collection } from "firebase/firestore";
-
 import "firebase/compat/auth";
+import "firebase/compat/storage";
+import "firebase/compat/firestore";
+
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTHDOMAIN,
@@ -21,5 +21,9 @@ export const Providers = {
 
 export const authService = firebase.auth();
 export const db = getFirestore();
+
+export const dbService = firebase.firestore();
+
+export const storageService = firebase.storage();
 
 export default firebase;
