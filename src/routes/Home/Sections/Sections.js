@@ -41,12 +41,14 @@ const Sections = () => {
     const user = useRecoilValue(authState);
     const [pagedSections, setPagedSections] = useState([]);
 
-    const checkedSectionsPage = pagedSections[currentPage - 1] || [];
+    const checkedSectionsPage = pagedSections[currentPage - 1];
     const isNextPage = pagedSections[currentPage] !== undefined;
     const SECTIONS_NUMBER_IN_PAGE = 10;
 
     useEffect(() => {
         // set query condition
+        const threadsRef = collection(db, "threads");
+        const pinQuery = orderBy("isPinned", "desc");
         let categoryQuery = null;
         let isSearch = false;
         let sortQuery = orderBy("createdAt", "desc");
@@ -63,23 +65,22 @@ const Sections = () => {
             sortQuery = orderBy("likesNum", "desc");
         }
 
-        const threadsRef = collection(db, "threads");
-        const pinQuery = orderBy("isPinned", "desc");
+        // set final query divided by isPinnedRequired
+        let q = null;
+        if (isPinnedRequired) {
+            q =
+                categoryQuery !== null
+                    ? query(threadsRef, categoryQuery, pinQuery, sortQuery)
+                    : query(threadsRef, pinQuery, sortQuery);
+        } else {
+            q =
+                categoryQuery !== null
+                    ? query(threadsRef, categoryQuery, sortQuery)
+                    : query(threadsRef, sortQuery);
+        }
 
-        // define processing funciton
+        // define fetching data function by query
         const processPinnedOrNot = (makePagedSections) => {
-            let q = null;
-            if (isPinnedRequired) {
-                q =
-                    categoryQuery !== null
-                        ? query(threadsRef, categoryQuery, pinQuery, sortQuery)
-                        : query(threadsRef, pinQuery, sortQuery);
-            } else {
-                q =
-                    categoryQuery !== null
-                        ? query(threadsRef, categoryQuery, sortQuery)
-                        : query(threadsRef, sortQuery);
-            }
             onSnapshot(q, (snap) => {
                 const data = snap.docs.map((doc) => ({
                     docId: doc.id,
@@ -117,24 +118,17 @@ const Sections = () => {
             }
             setPagedSections(result);
         };
+
         // decide returning value
-        if (isSearch) {
-            onSnapshot(query(threadsRef, sortQuery), (snap) => {
-                if (currentSearchInput !== "") {
-                    const data = snap.docs
-                        .filter((doc) =>
-                            doc.data().title.includes(currentSearchInput)
-                        )
-                        .map((doc) => ({ docId: doc.id, ...doc.data() }));
-                    console.log(data);
-                    makePagedSections(data);
-                } else {
-                    setPagedSections([]);
-                }
-            });
-        } else {
-            processPinnedOrNot(makePagedSections);
-        }
+        if (!isSearch) return processPinnedOrNot(makePagedSections);
+
+        onSnapshot(query(threadsRef, sortQuery), (snap) => {
+            if (currentSearchInput === "") return setPagedSections([]);
+            const data = snap.docs
+                .filter((doc) => doc.data().title.includes(currentSearchInput))
+                .map((doc) => ({ docId: doc.id, ...doc.data() }));
+            return makePagedSections(data);
+        });
     }, [
         currentCategory,
         currentSorter,
@@ -162,7 +156,7 @@ const Sections = () => {
 
     return (
         <StyledSections>
-            {checkedSectionsPage ? (
+            {checkedSectionsPage !== undefined ? (
                 checkedSectionsPage.map((section) => (
                     <Section
                         key={section.docId}
