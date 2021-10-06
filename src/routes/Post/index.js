@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Editor from '../../components/Editor';
-import Input from '../../components/UI/Input';
 import useInput from '../../Hooks/useInput';
 import Button from '../../components/UI/Button';
+import TitleInput from '../../components/TitleInput';
 import { theme } from '../../theme';
-import NOMAD_COURSES from '../Courses';
 import { dbService } from '../../fb';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../recoil/authRecoil';
 import { useHistory } from 'react-router';
+import NOMAD_COURSES from '../Courses';
 
 const Container = styled.div`
   display: flex;
@@ -45,19 +45,6 @@ const Form = styled.form`
   margin: 0 auto;
 `;
 
-const PostInput = styled(Input)`
-  width: -webkit-fill-available;
-  border: 1px solid ${(props) => props.theme.grey_500};
-  font-size: 1.125rem;
-  box-shadow: ${(props) => props.theme.shadow_md};
-  margin-bottom: 0;
-`;
-
-const TitleNotice = styled.p`
-  font-weight: 500;
-  font-size: 0.75rem;
-  color: ${(props) => props.theme.grey_500};
-`;
 
 const CategorySelect = styled.select`
   margin: 1.25rem 0;
@@ -181,8 +168,7 @@ function Post() {
       <Title>글쓰기</Title>
       <EditorWrapper>
         <Form onSubmit={submitHandler}>
-          <PostInput placeholder="제목 쓰기" {...title} />
-          <TitleNotice>Min. 10. Max. 80</TitleNotice>
+          <TitleInput title={title} />
           <CategorySelect value={category} onChange={categoryChangeHandler}>
             <option value="placeholder">카테고리 고르기</option>
             {NOMAD_COURSES.map((course) => {

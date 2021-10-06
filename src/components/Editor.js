@@ -69,12 +69,13 @@ const FormWrapper = styled.div`
   }
 `;
 
-function Editor({ onChange }) {
+function Editor({ onChange, prevData }) {
   return (
     <>
       <FormWrapper>
         <CKEditor
           editor={ClassicEditor}
+          data={prevData ? prevData : ''}
           onReady={(editor) => {
             editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
               return new UploadAdapter(loader);
