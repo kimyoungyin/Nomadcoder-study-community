@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Button from "../../components/UI/Button";
-import { authState } from "../../recoil/authRecoil";
+import Button from "../../UI/Button";
+import { authState } from "../../../recoil/authRecoil";
 import Categories from "./Categories";
 import SectionGrid from "./Sections/SectionGrid";
 

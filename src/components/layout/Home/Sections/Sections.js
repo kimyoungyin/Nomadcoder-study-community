@@ -9,14 +9,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { db } from "../../../fb";
-import { authState } from "../../../recoil/authRecoil";
+import { db } from "../../../../fb";
+import { authState } from "../../../../recoil/authRecoil";
 import {
     currentPageState,
     homeCategoryState,
     homeSortState,
     searchInputState,
-} from "../../../recoil/homeRecoil";
+} from "../../../../recoil/homeRecoil";
 import EmptySection from "./EmptySection";
 import Section from "./Section";
 

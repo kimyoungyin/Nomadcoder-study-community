@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import HomeHeader from "./HomeHeader";
-import HomeMain from "./HomeMain";
 import NOMAD_COURSES from "../Courses";
 import styled from "styled-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -9,6 +7,8 @@ import {
     homeCategoryState,
     homeSortState,
 } from "../../recoil/homeRecoil";
+import HomeHeader from "../../components/layout/Home/HomeHeader";
+import HomeMain from "../../components/layout/Home/HomeMain";
 
 const Homelayout = styled.div`
     padding: 7rem 0 8rem;

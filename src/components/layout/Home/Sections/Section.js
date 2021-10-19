@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faThumbtack } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
-import Card from "../../../components/UI/Card";
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import styled from "styled-components";
+import Card from "../../../UI/Card";
 import {
     arrayRemove,
     arrayUnion,
@@ -12,7 +12,7 @@ import {
     getDocs,
     runTransaction,
 } from "@firebase/firestore";
-import { db } from "../../../fb";
+import { db } from "../../../../fb";
 
 const SectionCard = styled(Card)`
     display: flex;
