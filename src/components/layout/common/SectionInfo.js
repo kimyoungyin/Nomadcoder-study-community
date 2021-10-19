@@ -98,7 +98,7 @@ const SectionInfo = ({ section, displayName }) => {
             await runTransaction(db, async (transaction) => {
                 const sectionDoc = await transaction.get(docRef);
                 if (!sectionDoc.exists()) {
-                    throw "해당 글이 존재하지 않습니다";
+                    throw new Error("해당 글이 존재하지 않습니다");
                 }
                 if (!isLiked) {
                     setIsLiked(true);
