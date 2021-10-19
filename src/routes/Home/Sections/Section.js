@@ -7,7 +7,9 @@ import { Link, useHistory } from "react-router-dom";
 import {
     arrayRemove,
     arrayUnion,
+    collection,
     doc,
+    getDocs,
     runTransaction,
 } from "@firebase/firestore";
 import { db } from "../../../fb";
@@ -102,19 +104,29 @@ const Section = ({
         category,
         createdAt,
         owner,
-        comments,
     },
     displayName,
 }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likedNumber, setLikedNumber] = useState(likesNum);
+    const [commentsNumber, setCommentsNumber] = useState(0);
     const history = useHistory();
     const docRef = doc(db, "threads", docId);
+    const commentsRef = collection(db, "threads", docId, "comments");
 
     useEffect(() => {
         const getArray = [...likes];
         const check = getArray.includes(displayName);
+        const getComments = async () => {
+            const commentsSnap = await getDocs(commentsRef);
+            setCommentsNumber(commentsSnap.size);
+        };
         setIsLiked(check);
+        getComments();
+
+        return () => {
+            setCommentsNumber(0);
+        };
     }, []);
 
     const handleLikeData = async () => {
@@ -197,9 +209,9 @@ const Section = ({
                     <span className="section-dot">•</span>
                     <div>{calculateTerm(createdAt)}</div>
                     <span className="section-dot">•</span>
-                    {/* <div className="section-comments">
-                        💬 <span>{comments.length}</span>
-                    </div> */}
+                    <div className="section-comments">
+                        💬 <span>{commentsNumber}</span>
+                    </div>
                 </div>
             </div>
             <img

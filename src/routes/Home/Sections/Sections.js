@@ -43,9 +43,9 @@ const Sections = () => {
 
     const checkedSectionsPage = pagedSections[currentPage - 1];
     const isNextPage = pagedSections[currentPage] !== undefined;
-    const SECTIONS_NUMBER_IN_PAGE = 10;
 
     useEffect(() => {
+        const SECTIONS_NUMBER_IN_PAGE = 10;
         // set query condition
         const threadsRef = collection(db, "threads");
         const pinQuery = orderBy("isPinned", "desc");
@@ -53,6 +53,7 @@ const Sections = () => {
         let isSearch = false;
         let sortQuery = orderBy("createdAt", "desc");
         let isPinnedRequired = false;
+        let currnetSnapShot;
         if (currentCategory === "search") {
             isSearch = true;
         } else if (currentCategory !== "all") {
@@ -81,11 +82,13 @@ const Sections = () => {
 
         // define fetching data function by query
         const processPinnedOrNot = (makePagedSections) => {
-            onSnapshot(q, (snap) => {
-                const data = snap.docs.map((doc) => ({
-                    docId: doc.id,
-                    ...doc.data(),
-                }));
+            currnetSnapShot = onSnapshot(q, (snap) => {
+                const data = snap.docs.map((doc) => {
+                    return {
+                        docId: doc.id,
+                        ...doc.data(),
+                    };
+                });
                 makePagedSections(data);
             });
         };
@@ -120,15 +123,28 @@ const Sections = () => {
         };
 
         // decide returning value
-        if (!isSearch) return processPinnedOrNot(makePagedSections);
-
-        onSnapshot(query(threadsRef, sortQuery), (snap) => {
-            if (currentSearchInput === "") return setPagedSections([]);
-            const data = snap.docs
-                .filter((doc) => doc.data().title.includes(currentSearchInput))
-                .map((doc) => ({ docId: doc.id, ...doc.data() }));
-            return makePagedSections(data);
-        });
+        if (!isSearch) {
+            processPinnedOrNot(makePagedSections);
+        } else if (
+            (currnetSnapShot = onSnapshot(
+                query(threadsRef, sortQuery),
+                (snap) => {
+                    if (currentSearchInput === "") {
+                        setPagedSections([]);
+                    } else {
+                        const data = snap.docs
+                            .filter((doc) =>
+                                doc.data().title.includes(currentSearchInput)
+                            )
+                            .map((doc) => ({ docId: doc.id, ...doc.data() }));
+                        makePagedSections(data);
+                    }
+                }
+            ))
+        )
+            return () => {
+                currnetSnapShot();
+            };
     }, [
         currentCategory,
         currentSorter,
