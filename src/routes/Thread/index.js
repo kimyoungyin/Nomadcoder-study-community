@@ -122,6 +122,11 @@ const ThreadGrid = styled.div`
             }
         }
     }
+    .thread-totalComments {
+        width: 100%;
+        color: #4b5563;
+        font-weight: 500;
+    }
     .thread-comments {
         margin-top: 1.25rem;
         width: 100%;
@@ -197,7 +202,6 @@ const Thread = ({ match }) => {
                 commentsCollectionRef,
                 orderBy("createdAt", "desc")
             );
-            // await 필요 없는 snapshot
             onSnapshot(q, (snapshot) => {
                 const arr = [];
                 snapshot.forEach((doc) => {
@@ -279,7 +283,9 @@ const Thread = ({ match }) => {
                                 </div>
                             </form>
                         )}
-                        <div>{comments.length} comments</div>
+                        <div className="thread-totalComments">
+                            {comments.length} comments
+                        </div>
                         <div className="thread-comments">
                             {comments.map((doc) => (
                                 <Comment doc={doc} key={doc.docId} />
