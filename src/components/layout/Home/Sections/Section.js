@@ -123,10 +123,6 @@ const Section = ({
         };
         setIsLiked(check);
         getComments();
-
-        return () => {
-            setCommentsNumber(0);
-        };
     }, [commentsNumber, displayName, commentsRef, likes]);
 
     const handleLikeData = async () => {

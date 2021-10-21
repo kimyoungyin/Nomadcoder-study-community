@@ -1,11 +1,5 @@
-import {
-    collection,
-    onSnapshot,
-    orderBy,
-    query,
-    where,
-} from "@firebase/firestore";
-import { useEffect, useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "@firebase/firestore";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -13,9 +7,11 @@ import { db } from "../../../../fb";
 import { authState } from "../../../../recoil/authRecoil";
 import {
     currentPageState,
-    homeCategoryState,
+    isSearchSelector,
     homeSortState,
     searchInputState,
+    sortQuerySelector,
+    categoryQuerySelector,
 } from "../../../../recoil/homeRecoil";
 import EmptySection from "./EmptySection";
 import Section from "./Section";
@@ -34,67 +30,40 @@ const StyledSections = styled.div`
 `;
 
 const Sections = () => {
-    const currentCategory = useRecoilValue(homeCategoryState);
-    const currentSorter = useRecoilValue(homeSortState);
+    const isSearch = useRecoilValue(isSearchSelector);
     const currentSearchInput = useRecoilValue(searchInputState);
     const currentPage = useRecoilValue(currentPageState);
     const user = useRecoilValue(authState);
+    const sorter = useRecoilValue(homeSortState);
+    const sortQuery = useRecoilValue(sortQuerySelector);
+    const categoryQuery = useRecoilValue(categoryQuerySelector);
     const [pagedSections, setPagedSections] = useState([]);
 
     const checkedSectionsPage = pagedSections[currentPage - 1];
     const isNextPage = pagedSections[currentPage] !== undefined;
+    const SECTIONS_NUMBER_IN_PAGE = 10;
+    const threadsRef = collection(db, "threads");
+    const pinQuery = orderBy("isPinned", "desc");
+    let q;
 
-    useEffect(() => {
-        const SECTIONS_NUMBER_IN_PAGE = 10;
-        // set query condition
-        const threadsRef = collection(db, "threads");
-        const pinQuery = orderBy("isPinned", "desc");
-        let categoryQuery = null;
-        let isSearch = false;
-        let sortQuery = orderBy("createdAt", "desc");
-        let isPinnedRequired = false;
-        let currnetSnapShot;
-        if (currentCategory === "search") {
-            isSearch = true;
-        } else if (currentCategory !== "all") {
-            categoryQuery = where("category", "==", currentCategory);
-        }
-
-        if (currentSorter !== "popular") {
-            isPinnedRequired = true;
+    if (isSearch) {
+        q = query(threadsRef, sortQuery);
+    } else if (sorter === "popular") {
+        if (categoryQuery !== null) {
+            q = query(threadsRef, categoryQuery, sortQuery);
         } else {
-            sortQuery = orderBy("likesNum", "desc");
+            q = query(threadsRef, sortQuery);
         }
-
-        // set final query divided by isPinnedRequired
-        let q = null;
-        if (isPinnedRequired) {
-            q =
-                categoryQuery !== null
-                    ? query(threadsRef, categoryQuery, pinQuery, sortQuery)
-                    : query(threadsRef, pinQuery, sortQuery);
+    } else {
+        if (categoryQuery !== null) {
+            q = query(threadsRef, categoryQuery, pinQuery, sortQuery);
         } else {
-            q =
-                categoryQuery !== null
-                    ? query(threadsRef, categoryQuery, sortQuery)
-                    : query(threadsRef, sortQuery);
+            q = query(threadsRef, pinQuery, sortQuery);
         }
+    }
 
-        // define fetching data function by query
-        const processPinnedOrNot = (makePagedSections) => {
-            currnetSnapShot = onSnapshot(q, (snap) => {
-                const data = snap.docs.map((doc) => {
-                    return {
-                        docId: doc.id,
-                        ...doc.data(),
-                    };
-                });
-                makePagedSections(data);
-            });
-        };
-
-        // define callback pagination funciton
-        const makePagedSections = (rawArray) => {
+    const makePagedSections = useCallback(
+        (rawArray) => {
             let result = [];
             const totalPages = Math.ceil(
                 rawArray.length / SECTIONS_NUMBER_IN_PAGE
@@ -119,38 +88,46 @@ const Sections = () => {
                     totalPages
                 );
             }
-            setPagedSections(result);
-        };
+            return result;
+        },
+        [isSearch, currentSearchInput]
+    );
 
-        // decide returning value
+    useEffect(() => {
+        let currnetSnapShot;
         if (!isSearch) {
-            processPinnedOrNot(makePagedSections);
-        } else if (
-            (currnetSnapShot = onSnapshot(
-                query(threadsRef, sortQuery),
-                (snap) => {
-                    if (currentSearchInput === "") {
-                        setPagedSections([]);
-                    } else {
-                        const data = snap.docs
-                            .filter((doc) =>
-                                doc.data().title.includes(currentSearchInput)
-                            )
-                            .map((doc) => ({ docId: doc.id, ...doc.data() }));
-                        makePagedSections(data);
-                    }
+            currnetSnapShot = onSnapshot(q, (snap) => {
+                const data = snap.docs.map((doc) => {
+                    return {
+                        docId: doc.id,
+                        ...doc.data(),
+                    };
+                });
+                setPagedSections(makePagedSections(data));
+            });
+        } else {
+            currnetSnapShot = onSnapshot(q, (snap) => {
+                if (currentSearchInput !== "") {
+                    const data = snap.docs
+                        .filter((doc) =>
+                            doc.data().title.includes(currentSearchInput)
+                        )
+                        .map((doc) => ({ docId: doc.id, ...doc.data() }));
+                    setPagedSections(makePagedSections(data));
                 }
-            ))
-        )
-            return () => {
-                currnetSnapShot();
-            };
+            });
+        }
+        console.log("hi");
+        return () => {
+            currnetSnapShot();
+            setPagedSections([]);
+        };
     }, [
-        currentCategory,
-        currentSorter,
+        categoryQuery,
+        sortQuery,
+        isSearch,
         currentSearchInput,
-        currentPage,
-        pagedSections,
+        makePagedSections,
     ]);
 
     const getLinkUrl = (location, currentPage, isNext) => {

@@ -11,9 +11,7 @@ const SectionsGrid = () => {
     return (
         <StyledSectionsGrid>
             <Sorter />
-            <React.Suspense fallback={<div>Loading...</div>}>
-                <Sections />
-            </React.Suspense>
+            <Sections />
         </StyledSectionsGrid>
     );
 };
