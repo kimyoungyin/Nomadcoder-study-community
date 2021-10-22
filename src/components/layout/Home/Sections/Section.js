@@ -107,7 +107,7 @@ const Section = ({
     },
     displayName,
 }) => {
-    const [isLiked, setIsLiked] = useState(false);
+    const [isLiked, setIsLiked] = useState(likes.includes(displayName));
     const [likedNumber, setLikedNumber] = useState(likesNum);
     const [commentsNumber, setCommentsNumber] = useState(0);
     const history = useHistory();
@@ -115,20 +115,24 @@ const Section = ({
     const commentsRef = collection(db, "threads", docId, "comments");
 
     useEffect(() => {
-        const getArray = [...likes];
-        const check = getArray.includes(displayName);
         const getComments = async () => {
             const commentsSnap = await getDocs(commentsRef);
             setCommentsNumber(commentsSnap.size);
         };
-        setIsLiked(check);
         getComments();
-    }, [commentsNumber, displayName, commentsRef, likes]);
+    }, [commentsRef]);
 
     const handleLikeData = async () => {
         if (!displayName) {
             alert("로그인 하시면 추천할 수 있어요!");
             return history.push("/join");
+        }
+        if (!isLiked) {
+            setIsLiked(true);
+            setLikedNumber((prev) => prev + 1);
+        } else if (isLiked) {
+            setIsLiked(false);
+            setLikedNumber((prev) => prev - 1);
         }
         try {
             await runTransaction(db, async (transaction) => {
@@ -137,16 +141,12 @@ const Section = ({
                     throw new Error("해당 글이 존재하지 않습니다");
                 }
                 if (!isLiked) {
-                    setIsLiked(true);
-                    setLikedNumber((prev) => prev + 1);
                     const newLikesNum = sectionDoc.data().likesNum + 1;
                     transaction.update(docRef, {
                         likesNum: newLikesNum,
                         likes: arrayUnion(displayName),
                     });
                 } else if (isLiked) {
-                    setIsLiked(false);
-                    setLikedNumber((prev) => prev - 1);
                     const newLikesNum = sectionDoc.data().likesNum - 1;
                     transaction.update(docRef, {
                         likesNum: newLikesNum,
