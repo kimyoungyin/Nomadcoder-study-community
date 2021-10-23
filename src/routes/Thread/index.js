@@ -8,7 +8,7 @@ import {
     query,
 } from "@firebase/firestore";
 import parse from "html-react-parser";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -186,6 +186,7 @@ const ThreadCard = styled(Card)`
 `;
 
 const Thread = ({ match }) => {
+    const isMounted = useRef(false);
     const [threadObj, setThreadObj] = useState(null);
     const [comments, setComments] = useState([]);
     const [isWriting, setIsWriting] = useState(false);
@@ -194,28 +195,33 @@ const Thread = ({ match }) => {
     const docRef = doc(db, "threads", docId);
     const commentsCollectionRef = collection(db, "threads", docId, "comments");
     const commentInput = useInput("");
+    const commentQuery = query(
+        commentsCollectionRef,
+        orderBy("createdAt", "desc")
+    );
 
     useEffect(() => {
+        let currentSnapshot;
+        isMounted.current = true;
         const fetchData = async () => {
             const thread = await getDoc(docRef);
-            const q = query(
-                commentsCollectionRef,
-                orderBy("createdAt", "desc")
-            );
-            onSnapshot(q, (snapshot) => {
+            if (thread.exists() && isMounted.current) {
+                setThreadObj(thread.data());
+            }
+            currentSnapshot = onSnapshot(commentQuery, (snapshot) => {
                 const arr = [];
                 snapshot.forEach((doc) => {
                     if (doc.exists())
                         arr.push({ docId: doc.id, ...doc.data() });
                 });
-                setComments(arr);
+                isMounted.current && setComments(arr);
             });
-            if (thread.exists()) {
-                setThreadObj(thread.data());
-            }
         };
         fetchData();
-    }, [commentsCollectionRef, docRef]);
+        return () => {
+            isMounted.current = false;
+        };
+    }, [docRef]);
     const commentSubmitHandler = async (event) => {
         event.preventDefault();
         const comment = commentInput.value.trim();
