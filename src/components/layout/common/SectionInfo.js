@@ -93,7 +93,7 @@ const SectionInfo = ({ section, displayName }) => {
             setCommentsNumber(commentsSnap.size);
         };
         getComments();
-    }, [commentsRef]);
+    }, [commentsRef, isLiked]);
 
     const handleLikeData = async () => {
         if (!displayName) {
