@@ -211,7 +211,7 @@ const ThreadGrid = ({ threadId }) => {
                                 ...threadObj,
                                 docId: threadId,
                             }}
-                            displayName={user ? user.displayName : null}
+                            displayName={user?.displayName}
                         />
                         <div className="thread-content">
                             {parse(threadObj.content)}
@@ -228,7 +228,12 @@ const ThreadGrid = ({ threadId }) => {
                             </div>
                             <div className="thread-comments">
                                 {comments.map((doc) => (
-                                    <Comment commentObj={doc} key={doc.docId} />
+                                    <Comment
+                                        commentObj={doc}
+                                        key={doc.docId}
+                                        displayName={user?.displayName}
+                                        threadId={threadId}
+                                    />
                                 ))}
                             </div>
                         </>
