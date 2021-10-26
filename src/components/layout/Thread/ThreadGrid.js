@@ -16,8 +16,8 @@ import SectionInfo from "../common/SectionInfo";
 import parse from "html-react-parser";
 import styled from "styled-components";
 import Card from "../../UI/Card";
-import Button from "../../UI/Button";
 import Comment from "./Comment";
+import CommentForm from "./CommentForm";
 
 const StyledThreadGrid = styled.div`
     grid-area: card;
@@ -143,23 +143,28 @@ const ThreadCard = styled(Card)`
     }
 `;
 
-const ThreadGrid = ({ docId }) => {
+const ThreadGrid = ({ threadId }) => {
     const user = useRecoilValue(authState);
     const [threadObj, setThreadObj] = useState(null);
     const [comments, setComments] = useState([]);
-    const [isWriting, setIsWriting] = useState(false);
     const isMounted = useRef(false);
     const commentInput = useInput("");
-    const docRef = doc(db, "threads", docId);
-    const commentsCollectionRef = collection(db, "threads", docId, "comments");
+    const docRef = doc(db, "threads", threadId);
+    const commentsCollectionRef = collection(
+        db,
+        "threads",
+        threadId,
+        "comments"
+    );
     const commentQuery = query(
         commentsCollectionRef,
         orderBy("createdAt", "desc")
     );
     console.log("render");
+
     useEffect(() => {
         isMounted.current = true;
-        const fetchData = async () => {
+        const fetchThreadData = async () => {
             const thread = await getDoc(docRef);
             if (thread.exists() && isMounted.current) {
                 setThreadObj(thread.data());
@@ -173,25 +178,27 @@ const ThreadGrid = ({ docId }) => {
                 isMounted.current && setComments(arr);
             });
         };
-        fetchData();
+        fetchThreadData();
         return () => {
             isMounted.current = false;
         };
     }, []);
 
-    const commentSubmitHandler = async (event) => {
-        event.preventDefault();
+    const commentSubmitHandler = async () => {
         const comment = commentInput.value.trim();
-        const docRef = await addDoc(commentsCollectionRef, {
-            comment,
-            createdAt: Date.now(),
-            likes: [],
-            owner: {
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-            },
-        });
-        console.log("Document written with ID: ", docRef.id);
+        try {
+            await addDoc(commentsCollectionRef, {
+                comment,
+                createdAt: Date.now(),
+                likes: [],
+                owner: {
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -202,7 +209,7 @@ const ThreadGrid = ({ docId }) => {
                         <SectionInfo
                             section={{
                                 ...threadObj,
-                                docId,
+                                docId: threadId,
                             }}
                             displayName={user ? user.displayName : null}
                         />
@@ -210,44 +217,22 @@ const ThreadGrid = ({ docId }) => {
                             {parse(threadObj.content)}
                         </div>
                     </ThreadCard>
-                    {!isWriting ? (
-                        <button
-                            className="thread-commentBtn"
-                            onClick={() => setIsWriting(true)}
-                        >
-                            add a comment
-                        </button>
-                    ) : (
-                        <form
-                            onSubmit={commentSubmitHandler}
-                            className="thread-commentForm"
-                        >
-                            <textarea
-                                type="text"
-                                placeholder="Leave a comment..."
-                                {...commentInput}
-                            />
-                            <div className="thread-btns">
-                                <Button
-                                    py={2}
-                                    disabled={commentInput.value.trim() === ""}
-                                >
-                                    <span>Write a comment</span>
-                                </Button>
-                                <span onClick={() => setIsWriting(false)}>
-                                    cancel
-                                </span>
+                    <CommentForm
+                        onSubmit={commentSubmitHandler}
+                        commentInput={commentInput}
+                    />
+                    {comments.length !== 0 && (
+                        <>
+                            <div className="thread-totalComments">
+                                {comments.length} comments
                             </div>
-                        </form>
+                            <div className="thread-comments">
+                                {comments.map((doc) => (
+                                    <Comment commentObj={doc} key={doc.docId} />
+                                ))}
+                            </div>
+                        </>
                     )}
-                    <div className="thread-totalComments">
-                        {comments.length} comments
-                    </div>
-                    <div className="thread-comments">
-                        {comments.map((doc) => (
-                            <Comment doc={doc} key={doc.docId} />
-                        ))}
-                    </div>
                 </>
             )}
         </StyledThreadGrid>

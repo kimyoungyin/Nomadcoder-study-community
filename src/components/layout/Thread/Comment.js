@@ -33,28 +33,31 @@ const CommentCard = styled(Card)`
     }
 `;
 
-const Comment = ({ doc }) => {
+const Comment = ({ commentObj }) => {
     return (
         <CommentCard>
             <div className="comment-info">
                 <LikeButton
-                    onChangeLikeData={() => {}}
-                    likedNumber={doc.likes.length}
+                    onLikeTransaction={() => {}}
+                    likedNumber={commentObj.likes.length}
                     isLiked={false}
                 />
                 <div className="comment-ownerData">
-                    <img src={doc.owner.photoURL} alt={doc.owner.displayName} />
+                    <img
+                        src={commentObj.owner.photoURL}
+                        alt={commentObj.owner.displayName}
+                    />
                     <div>
                         <span className="comment-ownerName">
-                            {doc.owner.displayName}
+                            {commentObj.owner.displayName}
                         </span>
                         <span className="comment-createdAt">
-                            &nbsp;|&nbsp;{useTerm(doc.createdAt)}
+                            &nbsp;|&nbsp;{useTerm(commentObj.createdAt)}
                         </span>
                     </div>
                 </div>
             </div>
-            <div>{doc.comment}</div>
+            <div>{commentObj.comment}</div>
         </CommentCard>
     );
 };

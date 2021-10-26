@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ThreadGrid from "../../components/layout/Thread/ThreadGrid";
@@ -45,13 +46,13 @@ const StyledThread = styled.div`
 `;
 
 const Thread = ({ match }) => {
-    const docId = match.params.docId;
+    const threadId = match.params.docId;
     return (
         <StyledThread>
             <Link to="/" className="thread-goBack">
                 <div>← Go back</div>
             </Link>
-            <ThreadGrid docId={docId} />
+            <ThreadGrid threadId={threadId} />
         </StyledThread>
     );
 };
