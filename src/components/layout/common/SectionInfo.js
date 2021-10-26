@@ -95,7 +95,7 @@ const SectionInfo = ({ section, displayName }) => {
         getComments();
     }, [commentsRef, isLiked]);
 
-    const handleLikeData = async () => {
+    const checkLikeStateAndRunTransaction = async () => {
         if (!displayName) {
             alert("로그인 하시면 추천할 수 있어요!");
             return history.push("/join");
@@ -135,7 +135,7 @@ const SectionInfo = ({ section, displayName }) => {
     return (
         <SectionInfoLayout>
             <LikeButton
-                onLikeTransaction={handleLikeData}
+                onLikeTransaction={checkLikeStateAndRunTransaction}
                 likedNumber={likedNumber}
                 isLiked={isLiked}
             />
