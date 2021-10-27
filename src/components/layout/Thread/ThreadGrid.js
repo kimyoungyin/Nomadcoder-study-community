@@ -35,50 +35,6 @@ const StyledThreadGrid = styled.div`
         font-size: 0.875rem;
         cursor: pointer;
     }
-    .thread-commentForm {
-        width: 100%;
-        margin: 2rem 0 2.5rem 0;
-        textarea {
-            //reset
-            border: 1px solid ${(props) => props.theme.grey_400};
-            overflow: auto;
-            -webkit-box-shadow: none;
-            -moz-box-shadow: none;
-            box-shadow: none;
-            resize: none;
-            width: 100%;
-            font-family: inherit;
-            padding: 1rem 1.25rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-        }
-        .thread-btns {
-            display: flex;
-            & > span {
-                padding: 0.5rem 1rem;
-                margin-left: 0.5rem;
-                font-weight: 500;
-                border: 1px solid ${(props) => props.theme.grey_200};
-                border-radius: 0.5rem;
-                cursor: pointer;
-            }
-        }
-        button {
-            width: 75%;
-            @media (min-width: 768px) {
-                width: 25%;
-            }
-            &:disabled,
-            &[disabled] {
-                background-color: #d1d5db;
-                opacity: 0.5;
-                span {
-                    color: #4b5563;
-                }
-            }
-        }
-    }
     .thread-totalComments {
         width: 100%;
         color: #4b5563;
@@ -147,6 +103,7 @@ const ThreadGrid = ({ threadId }) => {
     const user = useRecoilValue(authState);
     const [threadObj, setThreadObj] = useState(null);
     const [comments, setComments] = useState([]);
+    const [isWriting, setIsWriting] = useState(false);
     const isMounted = useRef(false);
     const commentInput = useInput("");
     const docRef = doc(db, "threads", threadId);
@@ -156,11 +113,11 @@ const ThreadGrid = ({ threadId }) => {
         threadId,
         "comments"
     );
+
     const commentQuery = query(
         commentsCollectionRef,
         orderBy("createdAt", "desc")
     );
-    console.log("render");
 
     useEffect(() => {
         isMounted.current = true;
@@ -172,8 +129,9 @@ const ThreadGrid = ({ threadId }) => {
             onSnapshot(commentQuery, (snapshot) => {
                 const arr = [];
                 snapshot.forEach((doc) => {
-                    if (doc.exists())
+                    if (doc.exists()) {
                         arr.push({ docId: doc.id, ...doc.data() });
+                    }
                 });
                 isMounted.current && setComments(arr);
             });
@@ -183,10 +141,11 @@ const ThreadGrid = ({ threadId }) => {
             isMounted.current = false;
         };
     }, []);
-
-    const commentSubmitHandler = async () => {
+    const finishWritingAndSubmit = async (event) => {
+        event.preventDefault();
         const comment = commentInput.value.trim();
         try {
+            setIsWriting(false);
             await addDoc(commentsCollectionRef, {
                 comment,
                 createdAt: Date.now(),
@@ -217,22 +176,33 @@ const ThreadGrid = ({ threadId }) => {
                             {parse(threadObj.content)}
                         </div>
                     </ThreadCard>
-                    <CommentForm
-                        onSubmit={commentSubmitHandler}
-                        commentInput={commentInput}
-                    />
+                    {isWriting ? (
+                        <CommentForm
+                            onSubmit={finishWritingAndSubmit}
+                            onCancel={() => setIsWriting(false)}
+                            commentInput={commentInput}
+                            submitComment="Write a comment"
+                        />
+                    ) : (
+                        <button
+                            className="thread-commentBtn"
+                            onClick={() => setIsWriting(true)}
+                        >
+                            add a comment
+                        </button>
+                    )}
                     {comments.length !== 0 && (
                         <>
                             <div className="thread-totalComments">
                                 {comments.length} comments
                             </div>
                             <div className="thread-comments">
-                                {comments.map((doc) => (
+                                {comments.map((commentObj) => (
                                     <Comment
-                                        commentObj={doc}
-                                        key={doc.docId}
-                                        displayName={user?.displayName}
+                                        commentObj={commentObj}
+                                        currentUser={user}
                                         threadId={threadId}
+                                        key={commentObj.docId}
                                     />
                                 ))}
                             </div>
@@ -244,4 +214,16 @@ const ThreadGrid = ({ threadId }) => {
     );
 };
 
+/* {comment.replyArr.map((reply) => {
+            return (
+                <Comment
+                    commentObj={comment}
+                    replyObj={reply}
+                    isReply={true}
+                    key={reply.docId}
+                    currentUser={user}
+                    threadId={threadId}
+                />
+            );
+        })} */
 export default ThreadGrid;
