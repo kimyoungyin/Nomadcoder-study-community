@@ -3,7 +3,7 @@ import Button from "../../UI/Button";
 
 const StyledCommentForm = styled.form`
     width: 100%;
-    margin: 2rem 0 2.5rem 0;
+    padding: 2rem 0 2.5rem ${(props) => (props.isReply ? "4rem" : 0)};
     textarea {
         //reset
         border: 1px solid ${(props) => props.theme.grey_400};
@@ -52,13 +52,19 @@ const CommentForm = ({
     onCancel,
     submitComment,
     defaultValue,
+    isReply,
 }) => {
     const isDisabled =
         commentInput.value.trim() === "" ||
         commentInput.value.trim() === defaultValue;
     return (
-        <StyledCommentForm onSubmit={onSubmit} className="thread-commentForm">
+        <StyledCommentForm
+            onSubmit={onSubmit}
+            isReply={isReply}
+            className="thread-commentForm"
+        >
             <textarea
+                autoFocus
                 type="text"
                 placeholder="Leave a comment..."
                 {...commentInput}
