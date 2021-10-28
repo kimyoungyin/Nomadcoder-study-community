@@ -1,4 +1,4 @@
-import { addDoc, deleteDoc, doc } from "@firebase/firestore";
+import { addDoc, deleteDoc, doc, updateDoc } from "@firebase/firestore";
 import { useState } from "react";
 import { db } from "../../../fb";
 import useInput from "../../../Hooks/useInput";
@@ -37,6 +37,12 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
         }
     };
 
+    const updateComment = async (updatedValue) => {
+        await updateDoc(replyRef, {
+            comment: updatedValue,
+        });
+    };
+
     const deleteComment = async () => {
         if (window.confirm("You are about to delete this comment. Continue?")) {
             await deleteDoc(replyRef);
@@ -49,7 +55,7 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
                 currentUser={currentUser}
                 dataObj={replyObj}
                 onToggleReplying={() => setIsReplying((prev) => !prev)}
-                onEdit={() => {}}
+                onUpdate={updateComment}
                 onDelete={deleteComment}
                 isReply={true}
             />

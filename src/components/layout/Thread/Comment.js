@@ -9,6 +9,7 @@ import {
     orderBy,
     query,
     runTransaction,
+    updateDoc,
 } from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -20,12 +21,11 @@ import Reply from "./Reply";
 
 const Comment = ({ commentObj, currentUser, threadId }) => {
     const [isLiked, setIsLiked] = useState(
-        commentObj.likes.includes(currentUser.displayName)
+        currentUser && commentObj.likes.includes(currentUser.displayName)
     );
     const [likedNumber, setLikedNumber] = useState(commentObj.likes.length);
     const [replies, setReplies] = useState([]);
     const [isReplying, setIsReplying] = useState(false);
-    const history = useHistory();
     const replyInput = useInput(`@${commentObj.owner.displayName} `);
     const commentRef = doc(
         db,
@@ -42,6 +42,7 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
         commentObj.docId,
         "replies"
     );
+
     useEffect(() => {
         const repliesQuery = query(repliesRef, orderBy("createdAt", "desc"));
         const stopSnapShot = onSnapshot(repliesQuery, (snapshot) => {
@@ -59,10 +60,6 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
     }, []);
 
     const checkLikeStateAndRunTransaction = async () => {
-        if (!currentUser) {
-            alert("로그인 하시면 추천할 수 있어요!");
-            return history.push("/join");
-        }
         if (!isLiked) {
             setIsLiked(true);
             setLikedNumber((prev) => prev + 1);
@@ -109,6 +106,12 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
         }
     };
 
+    const updateComment = async (updatedValue) => {
+        await updateDoc(commentRef, {
+            comment: updatedValue,
+        });
+    };
+
     const deleteComment = async () => {
         if (window.confirm("You are about to delete this comment. Continue?")) {
             await deleteDoc(commentRef);
@@ -120,7 +123,7 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
                 currentUser={currentUser}
                 dataObj={commentObj}
                 onToggleReplying={() => setIsReplying((prev) => !prev)}
-                onEdit={() => {}}
+                onUpdate={updateComment}
                 onDelete={deleteComment}
                 onLikeTransaction={checkLikeStateAndRunTransaction}
                 likedNumber={likedNumber}

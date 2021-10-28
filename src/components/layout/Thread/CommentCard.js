@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import useInput from "../../../Hooks/useInput";
 import useTerm from "../../../Hooks/useTerm";
@@ -63,7 +64,7 @@ const CommentCard = ({
     currentUser,
     dataObj,
     onToggleReplying,
-    onEdit,
+    onUpdate,
     onDelete,
     onLikeTransaction,
     likedNumber,
@@ -73,6 +74,25 @@ const CommentCard = ({
     const [isEditing, setIsEditing] = useState(false);
     const editInput = useInput(dataObj.comment);
     const term = useTerm(dataObj.createdAt);
+    const history = useHistory();
+
+    const LIKE_ALERT = "로그인 하시면 추천할 수 있어요!";
+    const REPLY_ALERT = "로그인 하시면 답변을 달 수 있어요!";
+
+    const liftUpUpdatedValue = (event) => {
+        event.preventDefault();
+        setIsEditing(false);
+        onUpdate(editInput.value);
+    };
+
+    const validateUserAndRunHandler = (alertText, handler) => {
+        if (!currentUser) {
+            alert(alertText);
+            return history.push("/join");
+        } else {
+            handler();
+        }
+    };
 
     return (
         <StyledCommentCard isReply={isReply}>
@@ -80,7 +100,12 @@ const CommentCard = ({
                 <div className="comment-info">
                     {isReply || (
                         <LikeButton
-                            onLikeTransaction={onLikeTransaction}
+                            onLikeTransaction={() =>
+                                validateUserAndRunHandler(
+                                    LIKE_ALERT,
+                                    onLikeTransaction
+                                )
+                            }
                             likedNumber={likedNumber}
                             isLiked={isLiked}
                         />
@@ -101,7 +126,15 @@ const CommentCard = ({
                     </div>
                 </div>
                 <div className="comment-icons">
-                    <div className="comment-makeSub" onClick={onToggleReplying}>
+                    <div
+                        className="comment-makeSub"
+                        onClick={() =>
+                            validateUserAndRunHandler(
+                                REPLY_ALERT,
+                                onToggleReplying
+                            )
+                        }
+                    >
                         <svg fill="currentColor" viewBox="0 0 20 20">
                             <path
                                 d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -110,32 +143,45 @@ const CommentCard = ({
                             ></path>
                         </svg>
                     </div>
-                    {dataObj.owner.displayName === currentUser.displayName && (
-                        <>
-                            <div
-                                className="comment-edit"
-                                onClick={() => setIsEditing((prev) => !prev)}
-                            >
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
-                                </svg>
-                            </div>
-                            <div className="comment-delete" onClick={onDelete}>
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                        fillRule="evenodd"
-                                    ></path>
-                                </svg>
-                            </div>
-                        </>
-                    )}
+                    {currentUser &&
+                        dataObj.owner.displayName ===
+                            currentUser.displayName && (
+                            <>
+                                <div
+                                    className="comment-edit"
+                                    onClick={() =>
+                                        setIsEditing((prev) => !prev)
+                                    }
+                                >
+                                    <svg
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                                    </svg>
+                                </div>
+                                <div
+                                    className="comment-delete"
+                                    onClick={onDelete}
+                                >
+                                    <svg
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                            clipRule="evenodd"
+                                            fillRule="evenodd"
+                                        ></path>
+                                    </svg>
+                                </div>
+                            </>
+                        )}
                 </div>
             </div>
             {isEditing ? (
                 <CommentForm
-                    onSubmit={() => {}}
+                    onSubmit={liftUpUpdatedValue}
                     commentInput={editInput}
                     onCancel={() => setIsEditing(false)}
                     submitComment="Save changes"
