@@ -21,6 +21,10 @@ const StyledCommentForm = styled.form`
     }
     .thread-btns {
         display: flex;
+        justify-content: space-between;
+        @media (min-width: 768px) {
+            justify-content: flex-start;
+        }
         & > span {
             padding: 0.5rem 1rem;
             margin-left: 0.5rem;
