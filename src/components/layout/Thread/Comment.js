@@ -12,7 +12,6 @@ import {
     updateDoc,
 } from "@firebase/firestore";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { db } from "../../../fb";
 import useInput from "../../../Hooks/useInput";
 import CommentCard from "./CommentCard";
@@ -107,8 +106,9 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
     };
 
     const updateComment = async (updatedValue) => {
+        const comment = updatedValue.trim();
         await updateDoc(commentRef, {
-            comment: updatedValue,
+            comment,
         });
     };
 

@@ -38,8 +38,9 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
     };
 
     const updateComment = async (updatedValue) => {
+        const comment = updatedValue.trim();
         await updateDoc(replyRef, {
-            comment: updatedValue,
+            comment,
         });
     };
 
