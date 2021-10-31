@@ -6,6 +6,7 @@ import useTerm from "../../../Hooks/useTerm";
 import Card from "../../UI/Card";
 import LikeButton from "../common/LikeButton";
 import CommentForm from "./CommentForm";
+import parse from "html-react-parser";
 
 const StyledCommentCard = styled(Card)`
     padding: 0.75rem;
@@ -57,6 +58,9 @@ const StyledCommentCard = styled(Card)`
         margin-top: 1rem;
         margin-left: ${(props) => props.isReply || "4rem"};
         color: black;
+        span {
+            color: ${(props) => props.theme.blue_light};
+        }
     }
 `;
 
@@ -94,6 +98,18 @@ const CommentCard = ({
         }
     };
 
+    const regexFunc = (match) => {
+        return `<span>${match}</span>`;
+    };
+
+    const parsedComment = parse(
+        dataObj.comment
+            .replace(
+                /@[\d|A-Z|a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*[^@|(\r\n|\n|\r)|\s]/gm,
+                regexFunc
+            )
+            .replace(/(\r\n|\n|\r)/gm, "<br/>")
+    );
     return (
         <StyledCommentCard isReply={isReply}>
             <div className="comment-top">
@@ -189,7 +205,7 @@ const CommentCard = ({
                     isReply={false}
                 />
             ) : (
-                <div className="comment-text">{dataObj.comment}</div>
+                <div className="comment-text">{parsedComment}</div>
             )}
         </StyledCommentCard>
     );
