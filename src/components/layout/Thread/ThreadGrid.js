@@ -141,7 +141,7 @@ const ThreadGrid = ({ threadId }) => {
             isMounted.current = false;
         };
     }, []);
-    const finishWritingAndSubmit = async (event) => {
+    const finishWritingAndSubmitHandler = async (event) => {
         event.preventDefault();
         const comment = commentInput.value.trim();
         try {
@@ -178,7 +178,7 @@ const ThreadGrid = ({ threadId }) => {
                     </ThreadCard>
                     {isWriting ? (
                         <CommentForm
-                            onSubmit={finishWritingAndSubmit}
+                            onSubmit={finishWritingAndSubmitHandler}
                             onCancel={() => setIsWriting(false)}
                             commentInput={commentInput}
                             submitComment="Write a comment"
