@@ -1,8 +1,10 @@
 import {
     addDoc,
     collection,
+    deleteDoc,
     doc,
     getDoc,
+    getDocs,
     onSnapshot,
     orderBy,
     query,
@@ -18,6 +20,7 @@ import styled from "styled-components";
 import Card from "../../UI/Card";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
+import { useHistory } from "react-router";
 
 const StyledThreadGrid = styled.div`
     grid-area: card;
@@ -100,13 +103,14 @@ const ThreadCard = styled(Card)`
 `;
 
 const ThreadGrid = ({ threadId }) => {
-    const user = useRecoilValue(authState);
+    const currentUser = useRecoilValue(authState);
     const [threadObj, setThreadObj] = useState(null);
     const [comments, setComments] = useState([]);
     const [isWriting, setIsWriting] = useState(false);
     const isMounted = useRef(false);
+    const history = useHistory();
     const commentInput = useInput("");
-    const docRef = doc(db, "threads", threadId);
+    const threadRef = doc(db, "threads", threadId);
     const commentsCollectionRef = collection(
         db,
         "threads",
@@ -122,7 +126,7 @@ const ThreadGrid = ({ threadId }) => {
     useEffect(() => {
         isMounted.current = true;
         const fetchThreadData = async () => {
-            const thread = await getDoc(docRef);
+            const thread = await getDoc(threadRef);
             if (thread.exists() && isMounted.current) {
                 setThreadObj(thread.data());
             }
@@ -151,12 +155,64 @@ const ThreadGrid = ({ threadId }) => {
                 createdAt: Date.now(),
                 likes: [],
                 owner: {
-                    displayName: user.displayName,
-                    photoURL: user.photoURL,
+                    displayName: currentUser.displayName,
+                    photoURL: currentUser.photoURL,
                 },
             });
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const threadDeleteHandler = async () => {
+        if (window.confirm("You are about to delete this post. Continue?")) {
+            try {
+                const allComments = await getDocs(commentsCollectionRef);
+                const allCommentsId = await allComments.docs.map(
+                    async (commentObj) => {
+                        await deleteDoc(
+                            doc(
+                                db,
+                                "threads",
+                                threadId,
+                                "comments",
+                                commentObj.id
+                            )
+                        );
+                        return doc.id;
+                    }
+                );
+                allCommentsId.map(async (commentId) => {
+                    const allReplies = await getDocs(
+                        collection(
+                            db,
+                            "threads",
+                            threadId,
+                            "comments",
+                            commentId,
+                            "replies"
+                        )
+                    );
+                    allReplies.docs.map(async (replyObj) => {
+                        await deleteDoc(
+                            doc(
+                                db,
+                                "threads",
+                                threadId,
+                                "comments",
+                                commentId,
+                                "replies",
+                                replyObj.id
+                            )
+                        );
+                    });
+                });
+                await deleteDoc(threadRef);
+                history.push("/");
+            } catch (error) {
+                console.log(error);
+                alert("삭제 중 오류가 발생했습니다.");
+            }
         }
     };
 
@@ -170,7 +226,9 @@ const ThreadGrid = ({ threadId }) => {
                                 ...threadObj,
                                 docId: threadId,
                             }}
-                            displayName={user?.displayName}
+                            displayName={currentUser?.displayName}
+                            isThread={true}
+                            onDelete={threadDeleteHandler}
                         />
                         <div className="thread-content">
                             {parse(threadObj.content)}
@@ -200,7 +258,7 @@ const ThreadGrid = ({ threadId }) => {
                                 {comments.map((commentObj) => (
                                     <Comment
                                         commentObj={commentObj}
-                                        currentUser={user}
+                                        currentUser={currentUser}
                                         threadId={threadId}
                                         key={commentObj.docId}
                                     />
@@ -214,16 +272,4 @@ const ThreadGrid = ({ threadId }) => {
     );
 };
 
-/* {comment.replyArr.map((reply) => {
-            return (
-                <Comment
-                    commentObj={comment}
-                    replyObj={reply}
-                    isReply={true}
-                    key={reply.docId}
-                    currentUser={user}
-                    threadId={threadId}
-                />
-            );
-        })} */
 export default ThreadGrid;

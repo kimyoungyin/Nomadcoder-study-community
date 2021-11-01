@@ -67,9 +67,50 @@ const SectionInfoLayout = styled.div`
             }
         }
     }
-    img {
-        width: 3.5rem;
-        border-radius: 50%;
+
+    .section-imgBox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            @media (max-width: 768px) {
+                display: none;
+            }
+        }
+        svg {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.25rem;
+        }
+        .section-deleteOrEdit {
+            margin-top: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            & > div,
+            a {
+                display: flex;
+                align-items: center;
+                padding: 0.25rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                cursor: pointer;
+                span,
+                svg > path {
+                    line-height: 1.5;
+                    color: white;
+                }
+            }
+            .section-delete {
+                margin-right: 1rem;
+                background-color: #ef4444;
+            }
+            .section-edit {
+                background-color: #fde047;
+            }
+        }
     }
     .section-title,
     a,
@@ -78,7 +119,7 @@ const SectionInfoLayout = styled.div`
     }
 `;
 
-const SectionInfo = ({ section, displayName }) => {
+const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
     const [isLiked, setIsLiked] = useState(section.likes.includes(displayName));
     const [likedNumber, setLikedNumber] = useState(section.likesNum);
     const [commentsNumber, setCommentsNumber] = useState(0);
@@ -169,11 +210,36 @@ const SectionInfo = ({ section, displayName }) => {
                     </div>
                 </div>
             </div>
-            <img
-                src={section.owner.photoURL}
-                alt={section.owner.displayName}
-                onClick={() => {}}
-            />
+            <div className="section-imgBox">
+                <img
+                    src={section.owner.photoURL}
+                    alt={section.owner.displayName}
+                    onClick={() => {}}
+                />
+                {isThread && displayName === section.owner.displayName && (
+                    <div className="section-deleteOrEdit">
+                        <div className="section-delete" onClick={onDelete}>
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clipRule="evenodd"
+                                    fillRule="evenodd"
+                                ></path>
+                            </svg>
+                            <span>Delete</span>
+                        </div>
+                        <Link
+                            className="section-edit"
+                            to={(location) => `${location.pathname}/edit`}
+                        >
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                            </svg>
+                            <span>Edit</span>
+                        </Link>
+                    </div>
+                )}
+            </div>
         </SectionInfoLayout>
     );
 };
