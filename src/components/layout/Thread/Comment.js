@@ -58,7 +58,7 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
         };
     }, []);
 
-    const checkLikeStateAndRunTransaction = async () => {
+    const checkLikeStateAndRunTransactionHandler = async () => {
         if (!isLiked) {
             setIsLiked(true);
             setLikedNumber((prev) => prev + 1);
@@ -87,7 +87,7 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
         }
     };
 
-    const addReply = async (event) => {
+    const addReplyHandler = async (event) => {
         event.preventDefault();
         const reply = replyInput.value.trim();
         try {
@@ -100,19 +100,22 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
                     photoURL: currentUser.photoURL,
                 },
             });
+            replyInput.onChange({
+                target: { value: `@${commentObj.owner.displayName} ` },
+            });
         } catch (error) {
             console.log(error);
         }
     };
 
-    const updateComment = async (updatedValue) => {
+    const updateCommentHandler = async (updatedValue) => {
         const comment = updatedValue.trim();
         await updateDoc(commentRef, {
             comment,
         });
     };
 
-    const deleteComment = async () => {
+    const deleteCommentHandler = async () => {
         if (window.confirm("You are about to delete this comment. Continue?")) {
             await deleteDoc(commentRef);
         }
@@ -123,16 +126,16 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
                 currentUser={currentUser}
                 dataObj={commentObj}
                 onToggleReplying={() => setIsReplying((prev) => !prev)}
-                onUpdate={updateComment}
-                onDelete={deleteComment}
-                onLikeTransaction={checkLikeStateAndRunTransaction}
+                onUpdate={updateCommentHandler}
+                onDelete={deleteCommentHandler}
+                onLikeTransaction={checkLikeStateAndRunTransactionHandler}
                 likedNumber={likedNumber}
                 isLiked={isLiked}
                 isReply={false}
             />
             {isReplying && (
                 <CommentForm
-                    onSubmit={addReply}
+                    onSubmit={addReplyHandler}
                     commentInput={replyInput}
                     onCancel={() => setIsReplying(false)}
                     submitComment="Reply"

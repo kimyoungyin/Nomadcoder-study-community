@@ -19,7 +19,7 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
         replyObj.docId
     );
 
-    const addReply = async (event) => {
+    const addReplyHandler = async (event) => {
         event.preventDefault();
         const reply = replyInput.value.trim();
         try {
@@ -32,19 +32,22 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
                     photoURL: currentUser.photoURL,
                 },
             });
+            replyInput.onChange({
+                target: { value: `@${replyObj.owner.displayName} ` },
+            });
         } catch (error) {
             console.log(error);
         }
     };
 
-    const updateComment = async (updatedValue) => {
+    const updateCommentHandler = async (updatedValue) => {
         const comment = updatedValue.trim();
         await updateDoc(replyRef, {
             comment,
         });
     };
 
-    const deleteComment = async () => {
+    const deleteCommentHandler = async () => {
         if (window.confirm("You are about to delete this comment. Continue?")) {
             await deleteDoc(replyRef);
         }
@@ -56,13 +59,13 @@ const Reply = ({ replyObj, currentUser, threadId, commentId, repliesRef }) => {
                 currentUser={currentUser}
                 dataObj={replyObj}
                 onToggleReplying={() => setIsReplying((prev) => !prev)}
-                onUpdate={updateComment}
-                onDelete={deleteComment}
+                onUpdate={updateCommentHandler}
+                onDelete={deleteCommentHandler}
                 isReply={true}
             />
             {isReplying && (
                 <CommentForm
-                    onSubmit={addReply}
+                    onSubmit={addReplyHandler}
                     commentInput={replyInput}
                     onCancel={() => setIsReplying(false)}
                     submitComment="Reply"

@@ -159,6 +159,7 @@ const ThreadGrid = ({ threadId }) => {
                     photoURL: currentUser.photoURL,
                 },
             });
+            commentInput.onChange({ target: { value: "" } });
         } catch (error) {
             console.log(error);
         }
