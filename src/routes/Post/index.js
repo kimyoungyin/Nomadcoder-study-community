@@ -10,6 +10,7 @@ import { useRecoilValue } from 'recoil';
 import { authState } from '../../recoil/authRecoil';
 import { useHistory } from 'react-router';
 import NOMAD_COURSES from '../Courses';
+import PinCheckBox from '../../components/PinCheckBox';
 
 const Container = styled.div`
   display: flex;
@@ -67,39 +68,6 @@ const PostButton = styled(Button)`
   margin-top: 2rem;
 `;
 
-const IsPinnedBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.1rem;
-  input[id='isPinned'] {
-    display: none;
-  }
-
-  input[id='isPinned'] + label {
-    display: inline-block;
-    width: 1.2rem;
-    height: 1.2rem;
-    border: 1px solid ${(props) => props.theme.grey_500};
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  input[id='isPinned']:checked + label {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    div {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 2px solid white;
-      background-color: ${(props) => props.theme.blue_light};
-      border-radius: 3px;
-    }
-  }
-`;
 
 function Post() {
   const user = useRecoilValue(authState);
@@ -120,6 +88,7 @@ function Post() {
   const contentChangeHandler = (data) => {
     setThreadContent(data);
   };
+
   const checkHandler = (e) => {
     setChecked(e.target.checked);
   };
@@ -163,6 +132,7 @@ function Post() {
       console.log(error);
     }
   };
+  
   return (
     <Container>
       <Title>글쓰기</Title>
@@ -179,15 +149,7 @@ function Post() {
               );
             })}
           </CategorySelect>
-          {isPinned && (
-            <IsPinnedBox>
-              <input type="checkbox" id="isPinned" onChange={checkHandler} />
-              <label for="isPinned">
-                <div></div>
-              </label>
-              <span>핀 고정시키기</span>
-            </IsPinnedBox>
-          )}
+          <PinCheckBox isPinned={isPinned} onChange={checkHandler} />
           <Editor onChange={contentChangeHandler} />
           <PostButton py={2} background={theme.blue_light}>
             <span>등록</span>
