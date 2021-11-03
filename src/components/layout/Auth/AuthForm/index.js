@@ -36,7 +36,8 @@ function AuthForm({ authType }) {
 
 
   const checkDisplayNameValidation = () => {
-    if(displayName.value.match(/@/) || displayName.value.match(/ /)) return false;
+    const typedDisplayName = displayName.value.trim();
+    if(typedDisplayName.match(/@/) || typedDisplayName.match(/ /)) return false;
     return true;
   }
 
