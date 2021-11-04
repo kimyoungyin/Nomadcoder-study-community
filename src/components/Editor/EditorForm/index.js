@@ -163,7 +163,7 @@ function EditorForm({ formTitle, hasCategory, role }) {
           <EditorPinCheck isPinned={isPinned} onChange={checkHandler} />
           <Editor onChange={contentChangeHandler} />
           <PostButton py={2} background={theme.blue_light}>
-            <span>등록</span>
+            <span>{role === 'post' ? '등록' : '수정'}</span>
           </PostButton>
         </Form>
       </EditorWrapper>
