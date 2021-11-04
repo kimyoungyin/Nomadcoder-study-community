@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Editor from '../../components/Editor';
-import useInput from '../../Hooks/useInput';
-import Button from '../../components/UI/Button';
-import EditorTitle from '../../components/Editor/EditorTitle';
-import { theme } from '../../theme';
-import { dbService } from '../../fb';
+import Editor from '../../Editor';
+import useInput from '../../../Hooks/useInput';
+import Button from '../../UI/Button';
+import EditorTitle from '../EditorTitle';
+import { theme } from '../../../theme';
+import { dbService } from '../../../fb';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../recoil/authRecoil';
+import { authState } from '../../../recoil/authRecoil';
 import { useHistory } from 'react-router';
-import NOMAD_COURSES from '../Courses';
-import EditorPinCheck from '../../components/Editor/EditorPinCheck';
-import EditorForm from '../../components/Editor/EditorForm';
+import NOMAD_COURSES from '../../../routes/Courses';
+import EditorPinCheck from '../EditorPinCheck';
 
 const Container = styled.div`
   display: flex;
@@ -68,7 +67,7 @@ const PostButton = styled(Button)`
   margin-top: 2rem;
 `;
 
-function Post() {
+function EditorForm({ formTitle, hasCategory, role }) {
   const user = useRecoilValue(authState);
   const title = useInput('', (title) => title.length <= 80);
   const [category, setCategory] = useState('');
@@ -92,8 +91,33 @@ function Post() {
     setChecked(e.target.checked);
   };
 
+  const addThread = async () => {
+    await dbService.collection('threads').add({
+      owner: {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      },
+      category: category,
+      isPinned: checked,
+      likes: [],
+      likesNum: 0,
+      comments: [],
+      commentsNum: 0,
+      title: title.value,
+      content: threadContent,
+      createdAt: Date.now(),
+    });
+    setCategory('');
+    setThreadContent('');
+  };
+
+  const editThread = async () => {
+    // 글 수정하는 fb 코드
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
     if (title.value.length < 10) {
       alert('제목은 10글자 이상 작성해주세요.');
       return;
@@ -109,30 +133,48 @@ function Post() {
     }
 
     try {
-      await dbService.collection('threads').add({
-        owner: {
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        },
-        category: category,
-        isPinned: checked,
-        likes: [],
-        likesNum: 0,
-        comments: [],
-        commentsNum: 0,
-        title: title.value,
-        content: threadContent,
-        createdAt: Date.now(),
-      });
-      setCategory('');
-      setThreadContent('');
+      if (role === 'post') addThread();
+      else if (role === 'edit') editThread();
+
       history.push('/');
     } catch (error) {
       console.log(error);
     }
   };
 
-  return <EditorForm formTitle="글쓰기" role="post" hasCategory={true} />;
+  return (
+    <Container>
+      <Title>{formTitle}</Title>
+      <EditorWrapper>
+        <Form onSubmit={submitHandler}>
+          <EditorTitle title={title} />
+          {hasCategory && (
+            <CategorySelect value={category} onChange={categoryChangeHandler}>
+              <option value="placeholder">카테고리 고르기</option>
+              {NOMAD_COURSES.map((course) => {
+                return (
+                  <option value={course.category} key={course.category}>
+                    {course.category}
+                  </option>
+                );
+              })}
+            </CategorySelect>
+          )}
+          <EditorPinCheck isPinned={isPinned} onChange={checkHandler} />
+          <Editor onChange={contentChangeHandler} />
+          <PostButton py={2} background={theme.blue_light}>
+            <span>등록</span>
+          </PostButton>
+        </Form>
+      </EditorWrapper>
+    </Container>
+  );
 }
 
-export default Post;
+EditorForm.defaultProps = {
+  formTitle: '글쓰기',
+  hasCategory: true,
+  role: 'post',
+};
+
+export default EditorForm;

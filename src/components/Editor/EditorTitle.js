@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import Input from './UI/Input'
+import Input from '../UI/Input'
 
 const StyledInput = styled(Input)`
   width: -webkit-fill-available;

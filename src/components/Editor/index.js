@@ -6,7 +6,7 @@ import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
-import UploadAdapter from '../ckfinder/UploadAdapter';
+import UploadAdapter from '../../ckfinder/UploadAdapter';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';

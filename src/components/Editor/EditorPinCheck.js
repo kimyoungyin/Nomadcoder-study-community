@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil';
+import React from 'react';
 import styled from 'styled-components';
-import { authState } from '../recoil/authRecoil';
-
 
 const IsPinnedBox = styled.div`
   display: flex;
@@ -38,20 +35,20 @@ const IsPinnedBox = styled.div`
   }
 `;
 
-function PinCheckBox({isPinned, onChange}) {  
+function PinCheckBox({ isPinned, onChange }) {
   return (
     <>
-    {isPinned && (
-      <IsPinnedBox>
-        <input type="checkbox" id="isPinned" onChange={onChange} />
-        <label for="isPinned">
-          <div></div>
-        </label>
-        <span>핀 고정시키기</span>
-      </IsPinnedBox>
-    )}
+      {isPinned && (
+        <IsPinnedBox>
+          <input type="checkbox" id="isPinned" onChange={onChange} />
+          <label htmlFor="isPinned">
+            <div></div>
+          </label>
+          <span>핀 고정시키기</span>
+        </IsPinnedBox>
+      )}
     </>
-  )
+  );
 }
 
-export default PinCheckBox
+export default PinCheckBox;
