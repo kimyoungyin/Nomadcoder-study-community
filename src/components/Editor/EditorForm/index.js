@@ -67,7 +67,7 @@ const PostButton = styled(Button)`
   margin-top: 2rem;
 `;
 
-function EditorForm({ formTitle, hasCategory, role }) {
+function EditorForm({ formTitle, role, onSubmit }) {
   const user = useRecoilValue(authState);
   const title = useInput('', (title) => title.length <= 80);
   const [category, setCategory] = useState('');
@@ -91,30 +91,6 @@ function EditorForm({ formTitle, hasCategory, role }) {
     setChecked(e.target.checked);
   };
 
-  const addThread = async () => {
-    await dbService.collection('threads').add({
-      owner: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      },
-      category: category,
-      isPinned: checked,
-      likes: [],
-      likesNum: 0,
-      comments: [],
-      commentsNum: 0,
-      title: title.value,
-      content: threadContent,
-      createdAt: Date.now(),
-    });
-    setCategory('');
-    setThreadContent('');
-  };
-
-  const editThread = async () => {
-    // 글 수정하는 fb 코드
-  };
-
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -133,8 +109,29 @@ function EditorForm({ formTitle, hasCategory, role }) {
     }
 
     try {
-      if (role === 'post') addThread();
-      else if (role === 'edit') editThread();
+      onSubmit(
+        role === 'post'
+          ? {
+              owner: {
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+              },
+              category: category,
+              isPinned: checked,
+              likes: [],
+              likesNum: 0,
+              comments: [],
+              commentsNum: 0,
+              title: title.value,
+              content: threadContent,
+              createdAt: Date.now(),
+            }
+          : {
+              isPinned: checked,
+              title: title.value,
+              content: threadContent,
+            }
+      );
 
       history.push('/');
     } catch (error) {
@@ -148,7 +145,7 @@ function EditorForm({ formTitle, hasCategory, role }) {
       <EditorWrapper>
         <Form onSubmit={submitHandler}>
           <EditorTitle title={title} />
-          {hasCategory && (
+          {role === 'post' && (
             <CategorySelect value={category} onChange={categoryChangeHandler}>
               <option value="placeholder">카테고리 고르기</option>
               {NOMAD_COURSES.map((course) => {
