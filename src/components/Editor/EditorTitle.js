@@ -19,7 +19,7 @@ const TitleNotice = styled.p`
 function TitleInput({ title, isPost }) {
   return (
     <>
-      <StyledInput placeholder="제목 쓰기" {...title} />
+      <StyledInput placeholder="제목 쓰기" {...title} disabled={!isPost && true} />
       {isPost && <TitleNotice>Min. 10. Max. 80</TitleNotice>}
     </>
   );
