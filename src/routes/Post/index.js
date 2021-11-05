@@ -7,7 +7,7 @@ function Post() {
     await dbService.collection('threads').add(thread);
   };
 
-  return <EditorForm formTitle="글쓰기" role="post" onSubmit={postHandler} />;
+  return <EditorForm onSubmit={postHandler} />;
 }
 
 export default Post;

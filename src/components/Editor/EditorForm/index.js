@@ -46,7 +46,7 @@ const Form = styled.form`
 `;
 
 const CategorySelect = styled.select`
-  margin: 1.25rem 0;
+  margin-top: 1.25rem;
   appearance: none;
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
@@ -66,17 +66,20 @@ const PostButton = styled(Button)`
   margin-top: 2rem;
 `;
 
-function EditorForm({ formTitle, role, onSubmit }) {
+function EditorForm({ isPost, onSubmit, prevData }) {
   const user = useRecoilValue(authState);
   const title = useInput('', (title) => title.length <= 80);
   const [category, setCategory] = useState('');
   const [threadContent, setThreadContent] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
-  const [checked, setChecked] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    if (user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND) setIsPinned(true);
+    if (user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND) setIsAdmin(true);
+    if (prevData?.title) title.setValue(prevData?.title);
+    if (prevData?.content) setThreadContent(prevData?.content);
+    if (prevData?.isPinned) setIsPinned(prevData?.isPinned);
   }, []);
 
   const categoryChangeHandler = (e) => {
@@ -87,7 +90,7 @@ function EditorForm({ formTitle, role, onSubmit }) {
   };
 
   const checkHandler = (e) => {
-    setChecked(e.target.checked);
+    setIsPinned(e.target.checked);
   };
 
   const submitHandler = async (e) => {
@@ -109,14 +112,14 @@ function EditorForm({ formTitle, role, onSubmit }) {
 
     try {
       onSubmit(
-        role === 'post'
+        isPost
           ? {
               owner: {
                 displayName: user.displayName,
                 photoURL: user.photoURL,
               },
               category: category,
-              isPinned: checked,
+              isPinned,
               likes: [],
               likesNum: 0,
               comments: [],
@@ -126,8 +129,7 @@ function EditorForm({ formTitle, role, onSubmit }) {
               createdAt: Date.now(),
             }
           : {
-              isPinned: checked,
-              title: title.value,
+              isPinned,
               content: threadContent,
             }
       );
@@ -140,11 +142,11 @@ function EditorForm({ formTitle, role, onSubmit }) {
 
   return (
     <Container>
-      <Title>{formTitle}</Title>
+      {isPost && <Title>글쓰기</Title>}
       <EditorWrapper>
         <Form onSubmit={submitHandler}>
-          <EditorTitle title={title} />
-          {role === 'post' && (
+          <EditorTitle title={title} isPost={isPost} />
+          {isPost && (
             <CategorySelect value={category} onChange={categoryChangeHandler}>
               <option value="placeholder">카테고리 고르기</option>
               {NOMAD_COURSES.map((course) => {
@@ -156,10 +158,10 @@ function EditorForm({ formTitle, role, onSubmit }) {
               })}
             </CategorySelect>
           )}
-          <EditorPinCheck isPinned={isPinned} onChange={checkHandler} />
-          <Editor onChange={contentChangeHandler} />
+          <EditorPinCheck isAdmin={isAdmin} isPinned={isPinned} onChange={checkHandler} />
+          <Editor onChange={contentChangeHandler} prevContent={threadContent} />
           <PostButton py={2} background={theme.blue_light}>
-            <span>{role === 'post' ? '등록' : '수정'}</span>
+            <span>{isPost ? '등록' : '수정'}</span>
           </PostButton>
         </Form>
       </EditorWrapper>
@@ -170,7 +172,7 @@ function EditorForm({ formTitle, role, onSubmit }) {
 EditorForm.defaultProps = {
   formTitle: '글쓰기',
   hasCategory: true,
-  role: 'post',
+  isPost: true,
 };
 
 export default EditorForm;

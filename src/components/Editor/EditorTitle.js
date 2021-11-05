@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import Input from '../UI/Input'
+import Input from '../UI/Input';
 
 const StyledInput = styled(Input)`
   width: -webkit-fill-available;
@@ -16,14 +16,13 @@ const TitleNotice = styled.p`
   color: ${(props) => props.theme.grey_500};
 `;
 
-
-function TitleInput({title}) {
+function TitleInput({ title, isPost }) {
   return (
     <>
       <StyledInput placeholder="제목 쓰기" {...title} />
-      <TitleNotice>Min. 10. Max. 80</TitleNotice>
+      {isPost && <TitleNotice>Min. 10. Max. 80</TitleNotice>}
     </>
-  )
+  );
 }
 
-export default TitleInput
+export default TitleInput;

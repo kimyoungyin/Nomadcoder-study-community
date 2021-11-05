@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const IsPinnedBox = styled.div`
+  margin-top: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -35,12 +36,12 @@ const IsPinnedBox = styled.div`
   }
 `;
 
-function PinCheckBox({ isPinned, onChange }) {
+function PinCheckBox({ isAdmin, isPinned, onChange }) {
   return (
     <>
-      {isPinned && (
+      {isAdmin && (
         <IsPinnedBox>
-          <input type="checkbox" id="isPinned" onChange={onChange} />
+          <input type="checkbox" id="isPinned" onChange={onChange} checked={isPinned} />
           <label htmlFor="isPinned">
             <div></div>
           </label>
