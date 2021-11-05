@@ -5,7 +5,6 @@ import useInput from '../../../Hooks/useInput';
 import Button from '../../UI/Button';
 import EditorTitle from '../EditorTitle';
 import { theme } from '../../../theme';
-import { dbService } from '../../../fb';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../recoil/authRecoil';
 import { useHistory } from 'react-router';
