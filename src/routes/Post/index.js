@@ -1,5 +1,5 @@
 import React from 'react';
-import { dbService } from '../../../fb';
+import { dbService } from '../../fb';
 import EditorForm from '../../components/Editor/EditorForm';
 
 function Post() {
