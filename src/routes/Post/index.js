@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { dbService } from '../../fb';
 import EditorForm from '../../components/Editor/EditorForm';
 
@@ -7,7 +7,7 @@ function Post() {
     await dbService.collection('threads').add(thread);
   };
 
-  return <EditorForm onSubmit={postHandler} />;
+  return <EditorForm isPost={true} onSubmit={postHandler} />;
 }
 
 export default Post;

@@ -68,18 +68,15 @@ const PostButton = styled(Button)`
 
 function EditorForm({ isPost, onSubmit, prevData }) {
   const user = useRecoilValue(authState);
-  const title = useInput('', (title) => title.length <= 80);
+  const title = useInput(prevData?.title, (title) => title.length <= 80);
   const [category, setCategory] = useState('');
-  const [threadContent, setThreadContent] = useState('');
+  const [threadContent, setThreadContent] = useState(prevData?.content);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
+  const [isPinned, setIsPinned] = useState(prevData?.isPinned);
   const history = useHistory();
 
   useEffect(() => {
     if (user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND) setIsAdmin(true);
-    if (prevData?.title) title.setValue(prevData?.title);
-    if (prevData?.content) setThreadContent(prevData?.content);
-    if (prevData?.isPinned) setIsPinned(prevData?.isPinned);
   }, []);
 
   const categoryChangeHandler = (e) => {
