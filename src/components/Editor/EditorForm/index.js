@@ -7,7 +7,6 @@ import EditorTitle from '../EditorTitle';
 import { theme } from '../../../theme';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../recoil/authRecoil';
-import { useHistory } from 'react-router';
 import NOMAD_COURSES from '../../../routes/Courses';
 import EditorPinCheck from '../EditorPinCheck';
 
@@ -71,9 +70,8 @@ function EditorForm({ isPost, onSubmit, prevData }) {
   const title = useInput(prevData?.title ? prevData?.title : '', (title) => title.length <= 80);
   const [category, setCategory] = useState('');
   const [threadContent, setThreadContent] = useState(prevData?.content ? prevData?.content : '');
-  const [isAdmin, setIsAdmin] = useState(user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND ? true : false);
+  const [isAdmin, ] = useState(user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND ? true : false);
   const [isPinned, setIsPinned] = useState(prevData?.isPinned ? prevData?.isPinned : false);
-  const history = useHistory();
 
   const categoryChangeHandler = (e) => {
     setCategory(e.target.value);
@@ -126,8 +124,6 @@ function EditorForm({ isPost, onSubmit, prevData }) {
               content: threadContent,
             }
       );
-
-      history.push('/');
     } catch (error) {
       console.log(error);
     }
