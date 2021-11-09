@@ -20,4 +20,6 @@ export const theme = {
 
     mobile: "(max-width: 768px)",
     tablet: "(max-width: 1024px)",
+
+    default_user_image: 'https://user-images.githubusercontent.com/60956392/134771392-91df7598-a7e8-4870-909e-737afd4bb52f.png'
 };
