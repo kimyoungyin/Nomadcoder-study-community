@@ -66,12 +66,24 @@ const PostButton = styled(Button)`
 `;
 
 function EditorForm({ isPost, onSubmit, prevData }) {
-  const user = useRecoilValue(authState);
-  const title = useInput(prevData?.title ? prevData?.title : '', (title) => title.length <= 80);
-  const [category, setCategory] = useState('');
-  const [threadContent, setThreadContent] = useState(prevData?.content ? prevData?.content : '');
-  const isAdmin = useMemo(() => user.uid === process.env.REACT_APP_ADMIN_FIRST || user.uid === process.env.REACT_APP_ADMIN_SECOND, []);
-  const [isPinned, setIsPinned] = useState(prevData?.isPinned ? prevData?.isPinned : false);
+    const user = useRecoilValue(authState);
+    const title = useInput(
+        prevData?.title ? prevData?.title : "",
+        (title) => title.length <= 80
+    );
+    const [category, setCategory] = useState("");
+    const [threadContent, setThreadContent] = useState(
+        prevData?.content ? prevData?.content : ""
+    );
+    const isAdmin = useMemo(
+        () =>
+            user.uid === process.env.REACT_APP_ADMIN_FIRST ||
+            user.uid === process.env.REACT_APP_ADMIN_SECOND,
+        [user.uid]
+    );
+    const [isPinned, setIsPinned] = useState(
+        prevData?.isPinned ? prevData?.isPinned : false
+    );
 
     const categoryChangeHandler = (e) => {
         setCategory(e.target.value);
@@ -101,33 +113,33 @@ function EditorForm({ isPost, onSubmit, prevData }) {
             return;
         }
 
-    try {
-      onSubmit(
-        isPost
-          ? {
-              owner: {
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-              },
-              category: category,
-              isPinned,
-              likes: [],
-              likesNum: 0,
-              comments: [],
-              commentsNum: 0,
-              title: title.value,
-              content: threadContent,
-              createdAt: Date.now(),
-            }
-          : {
-              isPinned,
-              content: threadContent,
-            }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        try {
+            onSubmit(
+                isPost
+                    ? {
+                          owner: {
+                              displayName: user.displayName,
+                              photoURL: user.photoURL,
+                          },
+                          category: category,
+                          isPinned,
+                          likes: [],
+                          likesNum: 0,
+                          comments: [],
+                          commentsNum: 0,
+                          title: title.value,
+                          content: threadContent,
+                          createdAt: Date.now(),
+                      }
+                    : {
+                          isPinned,
+                          content: threadContent,
+                      }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Container>
