@@ -1,5 +1,7 @@
 import { doc, getDoc, updateDoc } from "@firebase/firestore";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import EditorForm from "../../components/Editor/EditorForm";
+import Loader from "../../components/Loader";
 import { db } from "../../fb";
 
 const ThreadEditor = ({ match, history }) => {
@@ -19,14 +21,24 @@ const ThreadEditor = ({ match, history }) => {
     const threadEditFormHandler = async (newObj) => {
         if (newObj.content.trim() !== threadObj.content.trim()) {
             await updateDoc(threadRef, {
+                isPinned: newObj.isPinned,
                 content: newObj.content,
             });
             history.push(`/thread/${threadId}`);
         }
     };
-
     return (
-        <>{threadObj ? <div>가져옴</div> : <div>아직 가져오고 있습니다</div>}</>
+        <>
+            {threadObj ? (
+                <EditorForm
+                    isPost={false}
+                    onSubmit={threadEditFormHandler}
+                    prevData={threadObj}
+                />
+            ) : (
+                <Loader /> // Loader를 따로 createPortal로 다른 root에서 렌더링되게 하는 건 어떨까요?
+            )}
+        </>
     );
 };
 

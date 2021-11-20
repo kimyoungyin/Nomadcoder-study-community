@@ -216,6 +216,8 @@ const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
                     alt={section.owner.displayName}
                     onClick={() => {}}
                 />
+                {/* uid로 수정 전까지 임시 edit 버튼 활성화 */}
+                {/* {true && ( */}
                 {isThread && displayName === section.owner.displayName && (
                     <div className="section-deleteOrEdit">
                         <div className="section-delete" onClick={onDelete}>
