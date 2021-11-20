@@ -2,7 +2,7 @@ import { doc, getDoc, updateDoc } from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../fb";
 
-const EditThread = ({ match, history }) => {
+const ThreadEditor = ({ match, history }) => {
     const [threadObj, setThreadObj] = useState(null);
     const threadId = match.params.docId;
     const threadRef = doc(db, "threads", threadId);
@@ -14,7 +14,7 @@ const EditThread = ({ match, history }) => {
             }
         };
         fetchPrevData();
-    }, []);
+    }, [threadId]);
 
     const threadEditFormHandler = async (newObj) => {
         if (newObj.content.trim() !== threadObj.content.trim()) {
@@ -30,4 +30,4 @@ const EditThread = ({ match, history }) => {
     );
 };
 
-export default EditThread;
+export default ThreadEditor;
