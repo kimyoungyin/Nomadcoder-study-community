@@ -18,8 +18,17 @@ const ThreadEditor = ({ match, history }) => {
         fetchPrevData();
     }, [threadId]);
 
-    const threadEditFormHandler = async (newObj) => {
+    const editThreadSubmitHandler = async (newObj) => {
+        const changedThreadObj = {};
         if (newObj.content.trim() !== threadObj.content.trim()) {
+            changedThreadObj.content = newObj.content.trim();
+        }
+
+        if (newObj.isPinned !== threadObj.isPinned) {
+            changedThreadObj.isPinned = newObj.isPinned;
+        }
+
+        if (Object.keys(changedThreadObj).length !== 0) {
             await updateDoc(threadRef, {
                 isPinned: newObj.isPinned,
                 content: newObj.content,
@@ -32,7 +41,7 @@ const ThreadEditor = ({ match, history }) => {
             {threadObj ? (
                 <EditorForm
                     isPost={false}
-                    onSubmit={threadEditFormHandler}
+                    onSubmit={editThreadSubmitHandler}
                     prevData={threadObj}
                 />
             ) : (
