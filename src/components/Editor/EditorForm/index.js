@@ -71,7 +71,9 @@ function EditorForm({ isPost, onSubmit, prevData }) {
         prevData?.title ? prevData?.title : "",
         (title) => title.length <= 80
     );
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(
+        prevData?.category ? prevData?.category : ""
+    );
     const [threadContent, setThreadContent] = useState(
         prevData?.content ? prevData?.content : ""
     );
