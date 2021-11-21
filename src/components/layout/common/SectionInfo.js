@@ -216,9 +216,9 @@ const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
                     alt={section.owner.displayName}
                     onClick={() => {}}
                 />
-                {/* uid로 수정 전까지 임시 edit 버튼 활성화 */}
-                {/* {true && ( */}
-                {isThread && displayName === section.owner.displayName && (
+                {/* uid로 수정 전까지 edit delete하려면 임시로 아래 주석을 풀고 221줄 코드를 주석처리해주세요. */}
+                {/* {isThread && displayName === section.owner.displayName && ( */}
+                {isThread && true && (
                     <div className="section-deleteOrEdit">
                         <div className="section-delete" onClick={onDelete}>
                             <svg fill="currentColor" viewBox="0 0 20 20">
