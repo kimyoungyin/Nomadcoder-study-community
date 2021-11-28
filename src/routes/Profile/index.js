@@ -147,7 +147,7 @@ function Profile() {
   const nickname= useInput('');
   const [originalNickname, setOriginalNickname] = useState('');
   const [avatar, setAvatar] = useState('');
-  const [selectedFile, ] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const user = useRecoilValue(authState);
   const history = useHistory();
@@ -175,7 +175,9 @@ function Profile() {
   };
 
   const uploadHandler = (e) => {
-    setAvatar(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    setAvatar(URL.createObjectURL(file));
+    setSelectedFile(file);
   };
 
   const avatarSaveHandler = async () => {
