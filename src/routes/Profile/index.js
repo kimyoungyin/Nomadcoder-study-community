@@ -12,16 +12,22 @@ import { authState } from '../../recoil/authRecoil';
 
 const Container = styled.div`
   width: 100%;
+  max-width:1280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 4rem;
   padding: 5rem 9rem;
+  background-color: ${props => props.theme.grey_50};
   @media ${(props) => props.theme.tablet} {
     padding: 5rem 1.5rem;
   }
   @media ${(props) => props.theme.mobile} {
     padding: 5rem 1rem;
+  }
+
+  strong {
+    font-weight: bold;
   }
 `;
 
@@ -84,12 +90,24 @@ const ButtonRow = styled.div`
 const DeleteButtonRow = styled(ButtonRow)`
   justify-content: space-between;
   align-items: center;
+
+  div {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  @media ${(props) => props.theme.mobile} {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+  }
 `;
 
 const AvatarContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-top: 0.5rem;
 `;
 
 const ProfileCard = styled(Card)`
@@ -126,29 +144,38 @@ const Avatar = styled.div`
 `;
 
 function Profile() {
-  const nickname = useInput('');
+  const nickname= useInput('');
+  const [originalNickname, setOriginalNickname] = useState('');
   const [avatar, setAvatar] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, ] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const user = useRecoilValue(authState);
   const history = useHistory();
   useEffect(() => {
     setAvatar(user.photoURL);
-  }, [user.photoURL]);
+    setOriginalNickname(user.displayName);
+  }, [user.displayName, user.photoURL]);
 
   const nicknameChangeHandler = async () => {
-    if (nickname.value.length < 2) {
+    const newNickname = nickname.value.trim();
+    if (newNickname.length < 2) {
       alert('닉네임은 2글자 이상 작성해주세요.');
       return;
     }
-    await user.updateProfile({
-      displayName: nickname.value,
-    });
-    alert('닉네임이 변경되었습니다.');
+
+    if (originalNickname !== newNickname) {
+      await user.updateProfile({
+        displayName: nickname.value,
+      });
+      alert('닉네임이 변경되었습니다.');
+    } else {
+      alert('이전과 다른 닉네임으로 설정해주세요.');
+    }
+
   };
 
   const uploadHandler = (e) => {
-    setSelectedFile(e.target.files[0]);
+    setAvatar(URL.createObjectURL(e.target.files[0]));
   };
 
   const avatarSaveHandler = async () => {
@@ -189,7 +216,7 @@ function Profile() {
           </ChangeRow>
           <ButtonRow>
             <Button py={2} px={4} fs="0.875rem" onClick={nicknameChangeHandler}>
-              <span>Change Nickname</span>
+              <span>Change nickname</span>
             </Button>
           </ButtonRow>
         </ProfileCard>
@@ -205,7 +232,7 @@ function Profile() {
                 <img src={avatar} alt="profile" />
               </Avatar>
               <input type="file" id="file-uploader" onChange={uploadHandler} />
-              <label for="file-uploader">Choose Photo</label>
+              <label htmlFor="file-uploader">Choose Photo</label>
             </AvatarContainer>
           </ChangeRow>
           <ButtonRow>
@@ -220,12 +247,12 @@ function Profile() {
         <Left className="color-red">Delete Account</Left>
         <ProfileCard>
           <ChangeRow>
-            <p>This is a permanent action and it can't be undone. After you delete your account no one will be able to recover it.</p>
+            <p>This is a permanent action and it can't be undone. After you delete your account <strong>no one</strong> will be able to recover it.</p>
           </ChangeRow>
           <DeleteButtonRow>
             <div>
               <input type="checkbox" id="delete-checkbox" onChange={checkboxHandler} />
-              <label for="delete-checkbox">I understand this action is permanent and no one will be able to undo it</label>
+              <label htmlFor="delete-checkbox">I understand this action is <strong>permanent</strong> and no one will be able to undo it</label>
             </div>
             <DeleteButton py={2} px={4} fs="0.875rem" background="#EF4444" disabled={disabled} onClick={deleteClickHandler}>
               <span>Delete Account</span>
