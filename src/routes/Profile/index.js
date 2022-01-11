@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import HorizonLine from "../../components/HorizonLine";
 import Button from "../../components/UI/Button";
@@ -8,7 +7,6 @@ import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import { storageService } from "../../fb";
 import useInput from "../../Hooks/useInput";
-import { authState } from "../../recoil/authRecoil";
 
 const Container = styled.div`
     width: 100%;
@@ -148,18 +146,12 @@ const Avatar = styled.div`
     }
 `;
 
-function Profile() {
-    const nickname = useInput("");
-    const [originalNickname, setOriginalNickname] = useState("");
-    const [avatar, setAvatar] = useState("");
+function Profile({ user, onChangeUserPhotoUrl }) {
+    const nickname = useInput(user.displayName);
+    const [avatar, setAvatar] = useState(user.photoURL);
     const [selectedFile, setSelectedFile] = useState(null);
     const [disabled, setDisabled] = useState(true);
-    const user = useRecoilValue(authState);
     const history = useHistory();
-    useEffect(() => {
-        setAvatar(user.photoURL);
-        setOriginalNickname(user.displayName);
-    }, [user.displayName, user.photoURL]);
 
     const nicknameChangeHandler = async () => {
         const newNickname = nickname.value.trim();
@@ -168,7 +160,7 @@ function Profile() {
             return;
         }
 
-        if (originalNickname !== newNickname) {
+        if (user.displayName !== newNickname) {
             await user.updateProfile({
                 displayName: nickname.value,
             });
@@ -198,6 +190,7 @@ function Profile() {
             photoURL: imageUrl,
         });
         setAvatar(imageUrl);
+        onChangeUserPhotoUrl(imageUrl);
         alert("프로필 사진이 변경되었습니다.");
     };
 
