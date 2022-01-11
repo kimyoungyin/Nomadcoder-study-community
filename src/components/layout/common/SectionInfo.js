@@ -14,6 +14,8 @@ import { db } from "../../../fb";
 import styled from "styled-components";
 import LikeButton from "./LikeButton";
 import useTerm from "../../../Hooks/useTerm";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../recoil/authRecoil";
 
 const SectionInfoLayout = styled.div`
     display: flex;
@@ -119,8 +121,9 @@ const SectionInfoLayout = styled.div`
     }
 `;
 
-const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
-    const [isLiked, setIsLiked] = useState(section.likes.includes(displayName));
+const SectionInfo = ({ section, isThread = false, onDelete }) => {
+    const { uid } = useRecoilValue(authState);
+    const [isLiked, setIsLiked] = useState(section.likes.includes(uid));
     const [likedNumber, setLikedNumber] = useState(section.likesNum);
     const [commentsNumber, setCommentsNumber] = useState(0);
     const history = useHistory();
@@ -137,7 +140,7 @@ const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
     }, [commentsRef, isLiked]);
 
     const checkLikeStateAndRunTransactionHandler = async () => {
-        if (!displayName) {
+        if (!uid) {
             alert("로그인 하시면 추천할 수 있어요!");
             return history.push("/join");
         }
@@ -158,13 +161,13 @@ const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
                     const newLikesNum = sectionDoc.data().likesNum + 1;
                     transaction.update(docRef, {
                         likesNum: newLikesNum,
-                        likes: arrayUnion(displayName),
+                        likes: arrayUnion(uid),
                     });
                 } else if (isLiked) {
                     const newLikesNum = sectionDoc.data().likesNum - 1;
                     transaction.update(docRef, {
                         likesNum: newLikesNum,
-                        likes: arrayRemove(displayName),
+                        likes: arrayRemove(uid),
                     });
                 }
             });
@@ -216,9 +219,7 @@ const SectionInfo = ({ section, displayName, isThread = false, onDelete }) => {
                     alt={section.owner.displayName}
                     onClick={() => {}}
                 />
-                {/* uid로 수정 전까지 edit delete하려면 임시로 아래 주석을 풀고 221줄 코드를 주석처리해주세요. */}
-                {/* {isThread && true && ( */}
-                {isThread && displayName === section.owner.displayName && (
+                {isThread && uid === section.owner.displayName && (
                     <div className="section-deleteOrEdit">
                         <div className="section-delete" onClick={onDelete}>
                             <svg fill="currentColor" viewBox="0 0 20 20">
