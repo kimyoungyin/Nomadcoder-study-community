@@ -120,6 +120,7 @@ function EditorForm({ isPost, onSubmit, prevData }) {
                 isPost
                     ? {
                           owner: {
+                              uid: user.uid,
                               displayName: user.displayName,
                               photoURL: user.photoURL,
                           },
