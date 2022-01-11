@@ -219,7 +219,7 @@ const SectionInfo = ({ section, isThread = false, onDelete }) => {
                     alt={section.owner.displayName}
                     onClick={() => {}}
                 />
-                {isThread && uid === section.owner.displayName && (
+                {isThread && uid === section.owner?.uid && (
                     <div className="section-deleteOrEdit">
                         <div className="section-delete" onClick={onDelete}>
                             <svg fill="currentColor" viewBox="0 0 20 20">
