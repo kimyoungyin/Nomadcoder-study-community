@@ -17,6 +17,9 @@ export const theme = {
   shadow_lg: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
   shadow_xl: '0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04)',
 
-  mobile: '(max-width: 768px)',
-  tablet: '(max-width: 1024px)',
+
+    mobile: "(max-width: 768px)",
+    tablet: "(max-width: 1024px)",
+
+    default_user_image: 'https://user-images.githubusercontent.com/60956392/134771392-91df7598-a7e8-4870-909e-737afd4bb52f.png'
 };

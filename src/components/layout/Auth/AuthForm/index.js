@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { authService } from '../../../../fb';
 import useInput from '../../../../Hooks/useInput';
 import { authState } from '../../../../recoil/authRecoil';
+import { theme } from '../../../../theme';
 import Button from '../../../UI/Button';
 import Input from '../../../UI/Input';
 
@@ -27,8 +28,22 @@ function AuthForm({ authType }) {
   const email = useInput('');
   const password = useInput('');
   const displayName = useInput('');
+
+
+  const checkDisplayNameValidation = () => {
+    const typedDisplayName = displayName.value.trim();
+    if(typedDisplayName.match(/@/) || typedDisplayName.match(/ /)) return false;
+    return true;
+  }
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (authType === 'join' && !checkDisplayNameValidation()) {
+      alert('닉네임을 수정해주세요.')
+      return;
+    }
+
     try {
       let auth;
       if (authType === 'login') {
@@ -39,7 +54,7 @@ function AuthForm({ authType }) {
 
       if (auth.user) {
         await auth.user.updateProfile({
-          photoURL: 'https://user-images.githubusercontent.com/60956392/134771392-91df7598-a7e8-4870-909e-737afd4bb52f.png',
+          photoURL: theme.default_user_image,
           displayName: displayName.value
         })
         setAuth(auth.user);
