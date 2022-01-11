@@ -117,7 +117,7 @@ const Sections = () => {
                 }
             });
         }
-        console.log("hi");
+
         return () => {
             currnetSnapShot();
             setPagedSections([]);
