@@ -122,7 +122,7 @@ const SectionInfoLayout = styled.div`
 `;
 
 const SectionInfo = ({ section, isThread = false, onDelete }) => {
-    const { uid } = useRecoilValue(authState);
+    const { uid } = useRecoilValue(authState) || { uid: null };
     const [isLiked, setIsLiked] = useState(section.likes.includes(uid));
     const [likedNumber, setLikedNumber] = useState(section.likesNum);
     const [commentsNumber, setCommentsNumber] = useState(0);
