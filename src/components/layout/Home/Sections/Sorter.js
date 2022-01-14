@@ -3,7 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { homeCategoryState, homeSortState } from "../../../recoil/homeRecoil";
+import {
+    homeCategoryState,
+    homeSortState,
+} from "../../../../recoil/homeRecoil";
 
 const StyledSorter = styled.div`
     margin-bottom: 1rem;
@@ -46,11 +49,19 @@ const Sorter = ({ type, onTypeChange }) => {
         <StyledSorter type={sorter}>
             <div className="sorter-type">
                 <span>Sort by</span>
-                <Link to={`/${category}?sort=popular`} className="popular">
+                <Link
+                    to={`${
+                        category !== "all" ? `/${category}` : ""
+                    }?sort=popular`}
+                    className="popular"
+                >
                     <FontAwesomeIcon icon={faFire} />
                     Popular
                 </Link>
-                <Link to={`/${category}`} className="new">
+                <Link
+                    to={category !== "all" ? `/${category}` : "/"}
+                    className="new"
+                >
                     <FontAwesomeIcon icon={faBolt} />
                     New
                 </Link>

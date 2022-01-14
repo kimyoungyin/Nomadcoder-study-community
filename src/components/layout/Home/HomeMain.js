@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Button from "../../components/UI/Button";
-import { authState } from "../../recoil/authRecoil";
+import Button from "../../UI/Button";
+import { authState } from "../../../recoil/authRecoil";
 import Categories from "./Categories";
-import Sections from "./Sections/Sections";
+import SectionGrid from "./Sections/SectionGrid";
 
 const HomeMainLayout = styled.main`
     padding: 0 2rem 10rem;
@@ -35,14 +35,13 @@ const HomeMain = ({ courses }) => {
     const user = useRecoilValue(authState);
 
     const checkLoggedinHandler = () => {
-        if(!user)
-            alert('로그인 후 글쓰기가 가능합니다.');
-    }
+        if (!user) alert("로그인 후 글쓰기가 가능합니다.");
+    };
 
     return (
         <HomeMainLayout>
             <Categories courses={courses} />
-            <Sections />
+            <SectionGrid />
             <ButtonGrid>
                 <Link to="/post" onClick={checkLoggedinHandler}>
                     <Button shadow="md" fw={400} py={2}>

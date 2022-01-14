@@ -2,8 +2,8 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import useInput from "../../Hooks/useInput";
-import { searchInputState } from "../../recoil/homeRecoil";
+import useInput from "../../../Hooks/useInput";
+import { searchInputState } from "../../../recoil/homeRecoil";
 
 const StyledHomeHeader = styled.div`
     margin-bottom: 5rem;

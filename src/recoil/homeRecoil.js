@@ -1,5 +1,5 @@
+import { orderBy, where } from "@firebase/firestore";
 import { atom, selector } from "recoil";
-import DUMMY_SECTIONS from "../routes/Home/Sections/dummyData";
 
 export const homeCategoryState = atom({
     key: "homeCategory",
@@ -16,45 +16,44 @@ export const searchInputState = atom({
     default: "",
 });
 
-// 더미 데이터가 아니라 firebase로 가져올 때 sections를 atom으로 받아올 예정
+export const currentPageState = atom({
+    key: "sectionsPage",
+    default: 1,
+});
 
-export const sectionsSelector = selector({
-    key: "sections",
+export const categoryQuerySelector = selector({
+    key: "categoryQuerySelector",
     get: ({ get }) => {
         const category = get(homeCategoryState);
-        const sorter = get(homeSortState);
-        const searchInput = get(searchInputState);
-
-        const sortSections = (a, b) => {
-            if (a.isMain) return -1;
-            if (sorter === "new") {
-                if (a.createdAt > b.createdAt) return -1;
-                if (a.createdAt === b.createdAt) return 0;
-                if (a.createdAt < b.createdAt) return 1;
-            }
-            if (sorter === "popular") {
-                if (a.up > b.up) return -1;
-                if (a.up === b.up) return 0;
-                if (a.up < b.up) return 1;
-            }
-        };
-
-        let filteredSections = [];
-        if (category === "search") {
-            filteredSections = searchInput
-                ? DUMMY_SECTIONS.filter((obj) =>
-                      obj.title.includes(searchInput)
-                  )
-                : [];
-            // console.log(filteredSections);
-        } else if (category === "all") {
-            filteredSections = [...DUMMY_SECTIONS];
+        if (category !== "search" && category !== "all") {
+            return where("category", "==", category);
         } else {
-            filteredSections = DUMMY_SECTIONS.filter(
-                (obj) => obj.category === category
-            );
+            // default
+            return null;
         }
-        const processedSections = filteredSections.sort(sortSections);
-        return processedSections;
+    },
+});
+
+export const sortQuerySelector = selector({
+    key: "sortQuerySelector",
+    get: ({ get }) => {
+        const sorter = get(homeSortState);
+        if (sorter === "popular") {
+            return orderBy("likesNum", "desc");
+        } else {
+            return orderBy("createdAt", "desc");
+        }
+    },
+});
+
+export const isSearchSelector = selector({
+    key: "isSearchSelector",
+    get: ({ get }) => {
+        const category = get(homeCategoryState);
+        if (category === "search") {
+            return true;
+        } else {
+            return false;
+        }
     },
 });

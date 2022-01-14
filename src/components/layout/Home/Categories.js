@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { homeCategoryState } from "../../recoil/homeRecoil";
+import { homeCategoryState } from "../../../recoil/homeRecoil";
 import { useRecoilValue } from "recoil";
 
 const StyledCategories = styled.aside`
