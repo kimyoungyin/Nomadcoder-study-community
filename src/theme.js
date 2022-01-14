@@ -8,6 +8,7 @@ export const theme = {
     grey_400: "#9CA3AF", //  footer title, p, span
     grey_200: "#E5E7EB", // horizon line
     grey_100: "#F3F4F6",
+    grey_50: "#F9FAFB",
     grey_border: "#E5E7EB", // header, footer border
     yellow: "rgb(254,252,232)",
 
@@ -17,8 +18,10 @@ export const theme = {
         "0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)",
     shadow_xl:
         "0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04)",
-    shdow_inset: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)", // 404 페이지에도 쓰는게 좋을 것 같아 테마에 추가
 
     mobile: "(max-width: 768px)",
     tablet: "(max-width: 1024px)",
+
+    default_user_image:
+        "https://user-images.githubusercontent.com/60956392/134771392-91df7598-a7e8-4870-909e-737afd4bb52f.png",
 };
