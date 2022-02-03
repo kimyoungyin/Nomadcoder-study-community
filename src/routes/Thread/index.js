@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ThreadGrid from "../../components/layout/Thread/ThreadGrid";
@@ -47,6 +47,10 @@ const StyledThread = styled.div`
 
 const Thread = ({ match }) => {
     const threadId = match.params.docId;
+
+    useEffect(() => {
+        window.scroll({ top: 0, behavior: "smooth" });
+    }, []);
     return (
         <StyledThread>
             <Link to="/" className="thread-goBack">

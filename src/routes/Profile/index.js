@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import HorizonLine from "../../components/HorizonLine";
@@ -152,6 +152,10 @@ function Profile({ user, onChangeUserPhotoUrl }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [disabled, setDisabled] = useState(true);
     const history = useHistory();
+
+    useEffect(() => {
+        window.scroll({ top: 0, behavior: "smooth" });
+    }, []);
 
     const nicknameChangeHandler = async () => {
         const newNickname = nickname.value.trim();
