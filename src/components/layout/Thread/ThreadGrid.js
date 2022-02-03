@@ -150,12 +150,17 @@ const ThreadGrid = ({ threadId }) => {
         const comment = commentInput.value.trim();
         try {
             setIsWriting(false);
+            if (!currentUser) {
+                alert("로그인 하시면 댓글을 달 수 있어요!");
+                return history.push("/join");
+            }
             await addDoc(commentsCollectionRef, {
                 comment,
                 createdAt: Date.now(),
                 likes: [],
                 owner: {
                     displayName: currentUser.displayName,
+                    uid: currentUser.uid,
                     photoURL: currentUser.photoURL,
                 },
             });
@@ -227,7 +232,6 @@ const ThreadGrid = ({ threadId }) => {
                                 ...threadObj,
                                 docId: threadId,
                             }}
-                            displayName={currentUser?.displayName}
                             isThread={true}
                             onDelete={threadDeleteHandler}
                         />

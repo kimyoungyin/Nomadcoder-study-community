@@ -16,6 +16,7 @@ const ThreadEditor = ({ match, history }) => {
             }
         };
         fetchPrevData();
+        window.scroll({ top: 0, behavior: "smooth" });
     }, [threadId]);
 
     const editThreadSubmitHandler = async (newObj) => {

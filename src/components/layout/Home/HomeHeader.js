@@ -57,12 +57,13 @@ const StyledSearchBox = styled.div`
 
 const HomeHeader = ({ categoryObj, isSearch }) => {
     const setSearchInput = useSetRecoilState(searchInputState);
-    const Input = useInput("");
+    const input = useInput("");
 
     const searchInputSubmitHandler = (event) => {
         event.preventDefault();
-        setSearchInput(Input.value);
+        setSearchInput(input.value);
     };
+
     return (
         <>
             {!isSearch ? (
@@ -81,7 +82,7 @@ const HomeHeader = ({ categoryObj, isSearch }) => {
                     <form onSubmit={searchInputSubmitHandler}>
                         <input
                             type="text"
-                            {...Input}
+                            {...input}
                             placeholder="검색어 입력 후 엔터를 치세요"
                             autoFocus
                         />
