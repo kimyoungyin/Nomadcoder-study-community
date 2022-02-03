@@ -17,7 +17,7 @@ const Router = () => {
         setIsLoggedIn(false);
         setUser(null);
     };
-    console.log(user);
+
     const photoUrlChangeHandler = (url) => {
         setUser((prev) => ({
             ...prev,
