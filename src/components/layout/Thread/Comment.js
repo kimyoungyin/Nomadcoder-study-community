@@ -20,7 +20,7 @@ import Reply from "./Reply";
 
 const Comment = ({ commentObj, currentUser, threadId }) => {
     const [isLiked, setIsLiked] = useState(
-        currentUser && commentObj.likes.includes(currentUser.displayName)
+        currentUser && commentObj.likes.includes(currentUser.uid)
     );
     const [likedNumber, setLikedNumber] = useState(commentObj.likes.length);
     const [replies, setReplies] = useState([]);
@@ -74,11 +74,11 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
                 }
                 if (!isLiked) {
                     transaction.update(commentRef, {
-                        likes: arrayUnion(currentUser.displayName),
+                        likes: arrayUnion(currentUser.uid),
                     });
                 } else if (isLiked) {
                     transaction.update(commentRef, {
-                        likes: arrayRemove(currentUser.displayName),
+                        likes: arrayRemove(currentUser.uid),
                     });
                 }
             });
@@ -97,6 +97,7 @@ const Comment = ({ commentObj, currentUser, threadId }) => {
                 createdAt: Date.now(),
                 owner: {
                     displayName: currentUser.displayName,
+                    uid: currentUser.uid,
                     photoURL: currentUser.photoURL,
                 },
             });
