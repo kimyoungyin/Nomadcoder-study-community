@@ -4,16 +4,18 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import App from "./App";
 import { theme } from "./theme";
+import { RecoilRoot } from "recoil";
+
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
-  * {
-    color: ${(props) => props.theme.grey_500};
-  }
-
   body {
     font-family : "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    line-height:1.5rem;
+    * {
+        color: ${(props) => props.theme.grey_500};
+        line-height: 1.5rem;
+        box-sizing:border-box;
+    }
   }
 
   li a,
@@ -23,7 +25,7 @@ const GlobalStyles = createGlobalStyle`
   
   header, footer {
     a:hover, li a:hover {
-      color: ${(props) => props.theme.grey_hover};
+      color: ${(props) => props.theme.grey_910};
     }
   }
 
@@ -33,7 +35,9 @@ ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <GlobalStyles />
-            <App />
+            <RecoilRoot>
+                <App />
+            </RecoilRoot>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root")
