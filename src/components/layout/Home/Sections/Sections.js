@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { db } from "../../../../fb";
-import { authState } from "../../../../recoil/authRecoil";
 import {
     currentPageState,
     isSearchSelector,
@@ -33,7 +32,6 @@ const Sections = () => {
     const isSearch = useRecoilValue(isSearchSelector);
     const currentSearchInput = useRecoilValue(searchInputState);
     const currentPage = useRecoilValue(currentPageState);
-    const user = useRecoilValue(authState);
     const sorter = useRecoilValue(homeSortState);
     const sortQuery = useRecoilValue(sortQuerySelector);
     const categoryQuery = useRecoilValue(categoryQuerySelector);
@@ -117,7 +115,7 @@ const Sections = () => {
                 }
             });
         }
-        console.log("hi");
+
         return () => {
             currnetSnapShot();
             setPagedSections([]);
@@ -151,11 +149,7 @@ const Sections = () => {
         <StyledSections>
             {checkedSectionsPage !== undefined ? (
                 checkedSectionsPage.map((section) => (
-                    <Section
-                        key={section.docId}
-                        section={section}
-                        displayName={user ? user.displayName : null}
-                    />
+                    <Section key={section.docId} section={section} />
                 ))
             ) : (
                 <EmptySection />
