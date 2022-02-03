@@ -53,7 +53,7 @@ function AuthForm({ authType }) {
                 alert("비밀번호를 입력해주세요");
                 return;
             }
-            if (displayName.value.trim() === "") {
+            if (displayName.value.trim() === "" && authType === "join") {
                 alert("닉네임을 입력해주세요");
                 return;
             }
@@ -70,15 +70,53 @@ function AuthForm({ authType }) {
             }
 
             if (auth.user) {
+                console.log(auth.user.uid);
                 await auth.user.updateProfile({
                     photoURL: theme.default_user_image,
                     displayName: displayName.value,
                 });
-                setAuth(auth.user);
+                setAuth({
+                    uid: auth.user.uid,
+                    photoURL: theme.default_user_image,
+                    displayName: displayName.value,
+                });
                 history.push("/");
             }
         } catch (error) {
-            console.log(error);
+            const authError = String(error);
+            if (
+                authError.includes(
+                    "FirebaseError: Firebase: The password is invalid or the user does not have a password."
+                )
+            ) {
+                alert(
+                    "잘못된 비밀번호거나 해당 유저의 비밀번호가 존재하지 않습니다."
+                );
+            } else if (
+                authError.includes(
+                    "FirebaseError: Firebase: There is no user record corresponding to this identifier. The user may have been deleted."
+                )
+            ) {
+                alert("유저가 존재하지 않습니다.");
+            } else if (
+                authError.includes(
+                    "FirebaseError: Firebase: The email address is badly formatted."
+                )
+            ) {
+                alert("잘못된 이메일 형식입니다.");
+            } else if (
+                authError.includes(
+                    "FirebaseError: Firebase: The password must be 6 characters long or more."
+                )
+            ) {
+                alert("비밀번호는 최소 6자 이상이어야 합니다.");
+            } else if (
+                authError.includes(
+                    "FirebaseError: Firebase: The email address is already in use by another account. (auth/email-already-in-use)."
+                )
+            ) {
+                alert("해당 이메일의 계정이 이미 존재합니다.");
+            }
         }
     };
 

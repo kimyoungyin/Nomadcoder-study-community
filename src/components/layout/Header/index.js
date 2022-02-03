@@ -113,7 +113,9 @@ function Header({ user, onLogout, isLoggedIn }) {
                         </>
                     ) : (
                         <Avatar onClick={toggleModalHandler}>
-                            {user && <img src={user.photoURL} alt="avatar" />}
+                            {user.photoURL && (
+                                <img src={user.photoURL} alt="avatar" />
+                            )}
                             {showModal && (
                                 <AvatarModal>
                                     <AvatarModalBlock to="/profile">
