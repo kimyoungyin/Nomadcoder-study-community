@@ -46,7 +46,7 @@ const ThreadEditor = ({ match, history }) => {
                     prevData={threadObj}
                 />
             ) : (
-                <Loader /> // Loader를 따로 createPortal로 다른 root에서 렌더링되게 하는 건 어떨까요?
+                <Loader width={4} /> // Loader를 따로 createPortal로 다른 root에서 렌더링되게 하는 건 어떨까요?
             )}
         </>
     );
