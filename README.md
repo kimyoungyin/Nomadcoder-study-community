@@ -232,6 +232,7 @@ Distributed under the MIT License.
 ## Contact
 
 김영인 - yin199859@gmail.com
+
 신지호 - ziho@kakao.com
 
 Project Link: [https://github.com/kimyoungyin/Nomadcoder-study-community](https://github.com/kimyoungyin/Nomadcoder-study-community)
